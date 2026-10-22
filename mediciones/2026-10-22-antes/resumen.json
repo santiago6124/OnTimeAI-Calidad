@@ -1,0 +1,480 @@
+{
+  "carpeta": "2026-10-22-antes",
+  "repos": {
+    "backend": {
+      "cobertura": {
+        "lineas_pct": 39.5,
+        "lineas": 9801,
+        "lineas_cubiertas": 3869,
+        "ramas_pct": 33.6,
+        "ramas": 2886,
+        "ramas_cubiertas": 970,
+        "por_archivo": {
+          "adversarial_validation.py": 0.0,
+          "api.py": 64.1,
+          "batch_predict_v7.py": 0.0,
+          "build_airports_universe.py": 0.0,
+          "build_lineage_fallback.py": 0.0,
+          "compare_v6_v7.py": 0.0,
+          "concatenar_masters.py": 0.0,
+          "construir_dataset_maestro_full_us.py": 0.0,
+          "construir_dataset_maestro_multi.py": 25.7,
+          "descarga_aviationstack.py": 0.0,
+          "descarga_bts.py": 0.0,
+          "descarga_data_iem.py": 0.0,
+          "descarga_data_iem_full.py": 0.0,
+          "descarga_data_iem_multi.py": 0.0,
+          "eval_live.py": 0.0,
+          "eval_predictions.py": 0.0,
+          "evaluar_recalibrado.py": 0.0,
+          "live_backfill.py": 0.0,
+          "live_backfill_aeroapi.py": 0.0,
+          "live_job.py": 65.3,
+          "live_metrics.py": 0.0,
+          "live_pull.py": 7.4,
+          "predict.py": 41.5,
+          "recalibrate_live.py": 0.0,
+          "seed_demo.py": 0.0,
+          "shift_db.py": 0.0,
+          "train.py": 0.0,
+          "tune.py": 0.0,
+          "watchdog.py": 58.4,
+          "feature_engineering_v7/__init__.py": 100.0,
+          "feature_engineering_v7/adsb_lineage.py": 0.0,
+          "feature_engineering_v7/aircraft_type.py": 62.5,
+          "feature_engineering_v7/airport_lookup.py": 0.0,
+          "feature_engineering_v7/build_v7_dataset.py": 0.0,
+          "feature_engineering_v7/build_v8_dataset.py": 0.0,
+          "feature_engineering_v7/enroute_wind.py": 0.0,
+          "feature_engineering_v7/era5_download.py": 0.0,
+          "feature_engineering_v7/era5_wind_features.py": 0.0,
+          "feature_engineering_v7/gdp_scraper.py": 16.6,
+          "feature_engineering_v7/v8_features.py": 34.4,
+          "ontimeai/__init__.py": 100.0,
+          "ontimeai/airlabs.py": 0.0,
+          "ontimeai/calibration.py": 91.9,
+          "ontimeai/cascade.py": 100.0,
+          "ontimeai/chain_calibration.py": 94.2,
+          "ontimeai/config.py": 91.9,
+          "ontimeai/data.py": 20.7,
+          "ontimeai/evaluation.py": 85.7,
+          "ontimeai/explainability.py": 83.3,
+          "ontimeai/faa_nas.py": 0.0,
+          "ontimeai/features.py": 86.1,
+          "ontimeai/lineage.py": 97.4,
+          "ontimeai/lineage_fallback.py": 70.6,
+          "ontimeai/live.py": 42.0,
+          "ontimeai/model.py": 89.3,
+          "ontimeai/opensky.py": 0.0,
+          "ontimeai/pipeline.py": 93.6,
+          "ontimeai/rollup.py": 97.8,
+          "ontimeai/split.py": 94.1,
+          "ontimeai/training_store.py": 85.5,
+          "ontimeai/tuning.py": 0.0,
+          "ontimeai/validacion_calibrado.py": 96.7,
+          "scripts/analyze_live_period.py": 47.3,
+          "scripts/materialize_live_training.py": 86.0,
+          "scripts/prune_db.py": 73.8,
+          "unbiased_sample_live/__init__.py": 100.0,
+          "unbiased_sample_live/live_pull_multi.py": 0.0,
+          "unbiased_sample_live/sampler.py": 0.0
+        }
+      },
+      "cc_radon": {
+        "bloques": 587,
+        "promedio": 6.41,
+        "sobre_10": 94,
+        "sobre_15": 49,
+        "sobre_20": 24,
+        "sobre_30": 9,
+        "top": [
+          {
+            "cc": 157,
+            "archivo": "live_pull.py",
+            "nombre": "main",
+            "linea": 142
+          },
+          {
+            "cc": 70,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "materialize_fixed_horizons",
+            "linea": 1481
+          },
+          {
+            "cc": 45,
+            "archivo": "scripts/backtest_bts.py",
+            "nombre": "main",
+            "linea": 60
+          },
+          {
+            "cc": 45,
+            "archivo": "evaluar_recalibrado.py",
+            "nombre": "main",
+            "linea": 93
+          },
+          {
+            "cc": 41,
+            "archivo": "ontimeai/faa_nas.py",
+            "nombre": "_parse_nas_xml",
+            "linea": 151
+          },
+          {
+            "cc": 40,
+            "archivo": "scripts/data_quality_scorecard.py",
+            "nombre": "compute_scorecard",
+            "linea": 32
+          },
+          {
+            "cc": 35,
+            "archivo": "live_metrics.py",
+            "nombre": "main",
+            "linea": 59
+          },
+          {
+            "cc": 34,
+            "archivo": "feature_engineering_v7/gdp_scraper.py",
+            "nombre": "_refresh",
+            "linea": 169
+          },
+          {
+            "cc": 33,
+            "archivo": "ontimeai/live.py",
+            "nombre": "build_inference_frame",
+            "linea": 1490
+          },
+          {
+            "cc": 30,
+            "archivo": "unbiased_sample_live/live_pull_multi.py",
+            "nombre": "main",
+            "linea": 120
+          },
+          {
+            "cc": 29,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "publish_pending_outbox",
+            "linea": 1216
+          },
+          {
+            "cc": 29,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "prepare_silver_training_data",
+            "linea": 1968
+          },
+          {
+            "cc": 28,
+            "archivo": "scripts/materialize_live_training.py",
+            "nombre": "main",
+            "linea": 482
+          },
+          {
+            "cc": 28,
+            "archivo": "ontimeai/live.py",
+            "nombre": "_add_v7_wind_features",
+            "linea": 1761
+          },
+          {
+            "cc": 27,
+            "archivo": "scripts/bts_ground_truth_eval.py",
+            "nombre": "main",
+            "linea": 42
+          }
+        ]
+      },
+      "meta": {
+        "commit": "416eef8",
+        "ref": "origin/main",
+        "fecha": "2026-10-22"
+      }
+    },
+    "scrapper": {
+      "cobertura": {
+        "lineas_pct": 50.6,
+        "lineas": 1295,
+        "lineas_cubiertas": 655,
+        "ramas_pct": 33.4,
+        "ramas": 374,
+        "ramas_cubiertas": 125,
+        "por_archivo": {
+          "ontimeai_scrapper/__init__.py": 100.0,
+          "ontimeai_scrapper/airplanes_live_client.py": 25.8,
+          "ontimeai_scrapper/backfill_outcomes.py": 0.0,
+          "ontimeai_scrapper/config.py": 100.0,
+          "ontimeai_scrapper/db.py": 79.8,
+          "ontimeai_scrapper/fr24_client.py": 59.5,
+          "ontimeai_scrapper/fr24_horario.py": 88.9,
+          "ontimeai_scrapper/fr24_http.py": 32.8,
+          "ontimeai_scrapper/harvester.py": 24.9,
+          "ontimeai_scrapper/lineage_cache.py": 47.3,
+          "ontimeai_scrapper/opensky_client.py": 27.4
+        }
+      },
+      "cc_radon": {
+        "bloques": 102,
+        "promedio": 6.2,
+        "sobre_10": 17,
+        "sobre_15": 7,
+        "sobre_20": 5,
+        "sobre_30": 3,
+        "top": [
+          {
+            "cc": 41,
+            "archivo": "ontimeai_scrapper/lineage_cache.py",
+            "nombre": "select_tails_to_hydrate",
+            "linea": 338
+          },
+          {
+            "cc": 35,
+            "archivo": "ontimeai_scrapper/fr24_client.py",
+            "nombre": "normalize_flight",
+            "linea": 234
+          },
+          {
+            "cc": 31,
+            "archivo": "ontimeai_scrapper/harvester.py",
+            "nombre": "_run_once",
+            "linea": 301
+          },
+          {
+            "cc": 25,
+            "archivo": "ontimeai_scrapper/db.py",
+            "nombre": "reconcile_fr24_flight_aliases",
+            "linea": 659
+          },
+          {
+            "cc": 21,
+            "archivo": "scripts/validate_sources.py",
+            "nombre": "main",
+            "linea": 521
+          },
+          {
+            "cc": 18,
+            "archivo": "ontimeai_scrapper/fr24_client.py",
+            "nombre": "get_airport_page",
+            "linea": 115
+          },
+          {
+            "cc": 16,
+            "archivo": "ontimeai_scrapper/fr24_http.py",
+            "nombre": "fetch_aircraft_history",
+            "linea": 60
+          },
+          {
+            "cc": 15,
+            "archivo": "scripts/validate_sources.py",
+            "nombre": "check_faa_master",
+            "linea": 357
+          },
+          {
+            "cc": 14,
+            "archivo": "scripts/analyze_future_legs.py",
+            "nombre": "main",
+            "linea": 46
+          },
+          {
+            "cc": 14,
+            "archivo": "ontimeai_scrapper/opensky_client.py",
+            "nombre": "_normalize_state",
+            "linea": 132
+          },
+          {
+            "cc": 14,
+            "archivo": "ontimeai_scrapper/fr24_client.py",
+            "nombre": "normalize_actual",
+            "linea": 343
+          },
+          {
+            "cc": 12,
+            "archivo": "scripts/validate_sources.py",
+            "nombre": "check_fr24_airport",
+            "linea": 136
+          },
+          {
+            "cc": 12,
+            "archivo": "ontimeai_scrapper/lineage_cache.py",
+            "nombre": "maybe_hydrate_tail",
+            "linea": 143
+          },
+          {
+            "cc": 12,
+            "archivo": "ontimeai_scrapper/harvester.py",
+            "nombre": "harvest_chain_walk",
+            "linea": 190
+          },
+          {
+            "cc": 12,
+            "archivo": "ontimeai_scrapper/airplanes_live_client.py",
+            "nombre": "_normalize",
+            "linea": 89
+          }
+        ]
+      },
+      "meta": {
+        "commit": "2697284",
+        "ref": "origin/main",
+        "fecha": "2026-10-22"
+      }
+    },
+    "frontend": {
+      "cobertura": {
+        "lineas_pct": 17.6,
+        "lineas": 2533,
+        "lineas_cubiertas": 446,
+        "ramas_pct": 13.72,
+        "ramas": 2630,
+        "ramas_cubiertas": 361,
+        "funciones_pct": 10.23,
+        "por_archivo": {
+          "proxy.ts": 70,
+          "app/apple-icon.png": 100,
+          "app/error.tsx": 0,
+          "app/globals.css": 100,
+          "app/icon.png": 100,
+          "app/layout.tsx": 0,
+          "app/loading.tsx": 0,
+          "app/not-found.tsx": 0,
+          "app/page.tsx": 0,
+          "app/admin/layout.tsx": 0,
+          "app/admin/users/page.tsx": 0,
+          "app/alertas/page.tsx": 0,
+          "app/api/auth/firebase/route.ts": 100,
+          "app/api/auth/google/route.ts": 95.23,
+          "app/api/auth/login/route.ts": 0,
+          "app/api/auth/logout/route.ts": 0,
+          "app/api/backend/[...path]/route.ts": 0,
+          "app/api/ota/updates/route.ts": 96.77,
+          "app/api/weather/route.ts": 0,
+          "app/flights/page.tsx": 0,
+          "app/flights/[id]/page.tsx": 0,
+          "app/login/loading.tsx": 0,
+          "app/login/page.tsx": 0,
+          "app/mis-vuelos/page.tsx": 0,
+          "app/onboarding/loading.tsx": 0,
+          "app/onboarding/page.tsx": 0,
+          "app/privacidad/page.tsx": 0,
+          "app/reports/page.tsx": 0,
+          "app/routes/page.tsx": 0,
+          "app/settings/page.tsx": 0,
+          "app/signup/loading.tsx": 0,
+          "app/signup/page.tsx": 0,
+          "app/soporte/page.tsx": 0,
+          "app/tesis/layout.tsx": 0,
+          "app/tesis/page.tsx": 0,
+          "app/tesis/anticipacion/page.tsx": 0,
+          "app/tesis/casos-de-prueba/page.tsx": 0,
+          "app/tesis/flights/page.tsx": 0,
+          "app/tesis/pruebas/page.tsx": 0,
+          "app/tesis/verificacion/page.tsx": 0,
+          "app/tesis/weather/page.tsx": 0,
+          "app/weather/page.tsx": 0,
+          "components/app-nav.tsx": 14.28,
+          "components/app-shell.tsx": 20,
+          "components/auth-shell.tsx": 0,
+          "components/back-button.tsx": 0,
+          "components/brand-mark.tsx": 0,
+          "components/cascada-card.tsx": 16.27,
+          "components/cortina-de-nubes.tsx": 0,
+          "components/cortina-de-pista.tsx": 0,
+          "components/flight-detail-view.tsx": 0,
+          "components/flights-table.tsx": 0,
+          "components/google-sign-in-button.tsx": 0,
+          "components/hourly-delay-chart.tsx": 0,
+          "components/legal-shell.tsx": 0,
+          "components/metric-breakdown-table.tsx": 0,
+          "components/metric-cards-view.tsx": 0,
+          "components/metric-cards.tsx": 0,
+          "components/model-badge-view.tsx": 0,
+          "components/model-badge.tsx": 0,
+          "components/model-phase-chart.tsx": 0,
+          "components/model-quality-chart.tsx": 0,
+          "components/model-quality-summary.tsx": 0,
+          "components/operational-impact-cards-view.tsx": 0,
+          "components/operational-impact-cards.tsx": 0,
+          "components/prediction-evolution.tsx": 0,
+          "components/prediction-history-chart.tsx": 0,
+          "components/profile-switcher.tsx": 0,
+          "components/raw-payload-panel.tsx": 0,
+          "components/risk-badge.tsx": 0,
+          "components/route-history-chart.tsx": 0,
+          "components/routes-table.tsx": 0,
+          "components/shap-panel.tsx": 0,
+          "components/system-health-card.tsx": 0,
+          "components/verificacion-view.tsx": 0,
+          "components/weather-card-view.tsx": 0,
+          "components/weather-card.tsx": 0,
+          "components/weather-error-card.tsx": 0,
+          "components/maps/flight-radar-map-dynamic.tsx": 0,
+          "components/maps/flight-radar-map.tsx": 0,
+          "components/maps/map-overrides.css": 100,
+          "components/maps/weather-map-dynamic.tsx": 0,
+          "components/maps/weather-map.tsx": 0,
+          "components/providers/native-session-provider.tsx": 0,
+          "components/providers/profile-provider.tsx": 20,
+          "components/providers/session-provider.tsx": 22.22,
+          "components/tesis/anticipacion-view.tsx": 37.5,
+          "components/ui/avatar.tsx": 0,
+          "components/ui/badge.tsx": 50,
+          "components/ui/button.tsx": 50,
+          "components/ui/card.tsx": 0,
+          "components/ui/chart.tsx": 0,
+          "components/ui/dialog.tsx": 0,
+          "components/ui/dropdown-menu.tsx": 0,
+          "components/ui/input.tsx": 0,
+          "components/ui/label.tsx": 0,
+          "components/ui/password-input.tsx": 0,
+          "components/ui/scroll-area.tsx": 0,
+          "components/ui/seccion-colapsable.tsx": 25,
+          "components/ui/select.tsx": 0,
+          "components/ui/separator.tsx": 50,
+          "components/ui/sheet.tsx": 0,
+          "components/ui/sidebar.tsx": 0,
+          "components/ui/skeleton.tsx": 0,
+          "components/ui/sonner.tsx": 0,
+          "components/ui/table.tsx": 0,
+          "components/ui/tabs.tsx": 0,
+          "components/ui/tarjeta-colapsable.tsx": 0,
+          "components/ui/tooltip.tsx": 20,
+          "components/viajero/alertas-clima-view.tsx": 0,
+          "components/viajero/boton-guardar.tsx": 0,
+          "components/viajero/buscador-vuelo.tsx": 0,
+          "components/viajero/detalle-viajero.tsx": 0,
+          "components/viajero/home-viajero.tsx": 0,
+          "components/viajero/mis-vuelos-view.tsx": 0,
+          "components/viajero/proximos-vuelos.tsx": 0,
+          "hooks/use-flights.ts": 8.69,
+          "hooks/use-mobile.ts": 0,
+          "hooks/use-real-flight-tracks.ts": 74.07,
+          "hooks/use-weather-stations.ts": 0,
+          "lib/api.ts": 35.66,
+          "lib/auth-types.ts": 100,
+          "lib/contacto.ts": 0,
+          "lib/firebase.ts": 0,
+          "lib/geo.ts": 81.25,
+          "lib/mobile-env.ts": 50,
+          "lib/mock-data.ts": 0,
+          "lib/model-history.ts": 100,
+          "lib/motivos-viajero.ts": 100,
+          "lib/operational-impact.ts": 100,
+          "lib/perspectiva-pista.ts": 100,
+          "lib/routes.ts": 0,
+          "lib/secciones-abiertas.ts": 72,
+          "lib/server-auth.ts": 0,
+          "lib/server-profile.ts": 0,
+          "lib/shap-explain.ts": 100,
+          "lib/utils.ts": 0,
+          "lib/weather-api.ts": 38.46,
+          "lib/native/app-ready.ts": 0,
+          "lib/native/session.ts": 0
+        }
+      },
+      "tests": {
+        "total": 233,
+        "archivos": 25
+      },
+      "meta": {
+        "commit": "c9aa055",
+        "ref": "origin/main",
+        "fecha": "2026-10-22"
+      }
+    }
+  }
+}
