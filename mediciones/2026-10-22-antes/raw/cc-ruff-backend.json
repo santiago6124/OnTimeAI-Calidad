@@ -1,0 +1,401 @@
+[
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 9,
+      "row": 60
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/feature_engineering_v7/build_v7_dataset.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 60
+    },
+    "message": "`main` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 60,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 17,
+      "row": 169
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/feature_engineering_v7/gdp_scraper.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 169
+    },
+    "message": "`_refresh` is too complex (17 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 169,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 9,
+      "row": 467
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/live_job.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 467
+    },
+    "message": "`main` is too complex (13 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 467,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 9,
+      "row": 142
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/live_pull.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 142
+    },
+    "message": "`main` is too complex (72 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 142,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 16,
+      "row": 87
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/data.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 87
+    },
+    "message": "`load_master` is too complex (16 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 87,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 19,
+      "row": 151
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/faa_nas.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 151
+    },
+    "message": "`_parse_nas_xml` is too complex (27 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 151,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 27,
+      "row": 155
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/lineage_fallback.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 155
+    },
+    "message": "`apply_lineage_fallback` is too complex (23 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 155,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 18,
+      "row": 554
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 554
+    },
+    "message": "`fetch_iem_obs` is too complex (12 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 554,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 23,
+      "row": 790
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 790
+    },
+    "message": "`chain_walk_inbound` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 790,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 27,
+      "row": 1082
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1082
+    },
+    "message": "`compute_adsb_eta_delay` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1082,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 29,
+      "row": 1181
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1181
+    },
+    "message": "`compute_adsb_holding_min` is too complex (12 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1181,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 26,
+      "row": 1490
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1490
+    },
+    "message": "`build_inference_frame` is too complex (24 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1490,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 26,
+      "row": 1761
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1761
+    },
+    "message": "`_add_v7_wind_features` is too complex (23 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1761,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 20,
+      "row": 54
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/pipeline.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 54
+    },
+    "message": "`prepare_dataset` is too complex (12 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 54,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 33,
+      "row": 572
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 572
+    },
+    "message": "`enqueue_prediction_snapshots` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 572,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 26,
+      "row": 1070
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1070
+    },
+    "message": "`_coerce_parquet_frame` is too complex (16 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1070,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 24,
+      "row": 1118
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1118
+    },
+    "message": "`_upload_create_only` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1118,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 27,
+      "row": 1216
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1216
+    },
+    "message": "`publish_pending_outbox` is too complex (17 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1216,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 31,
+      "row": 1481
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1481
+    },
+    "message": "`materialize_fixed_horizons` is too complex (41 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1481,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 33,
+      "row": 1968
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 1968
+    },
+    "message": "`prepare_silver_training_data` is too complex (22 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 1968,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  },
+  {
+    "cell": null,
+    "code": "C901",
+    "end_location": {
+      "column": 28,
+      "row": 34
+    },
+    "filename": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/predict.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 34
+    },
+    "message": "`prepare_inference_frame` is too complex (11 > 10)",
+    "name": "complex-structure",
+    "noqa_row": 34,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/complex-structure"
+  }
+]

@@ -80,13 +80,123 @@
           "unbiased_sample_live/sampler.py": 0.0
         }
       },
+      "cc_ruff": {
+        "sobre_umbral": 21,
+        "funciones": {
+          "live_pull.py::main": {
+            "cc": 72,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/live_pull.py",
+            "linea": 142
+          },
+          "training_store.py::materialize_fixed_horizons": {
+            "cc": 41,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 1481
+          },
+          "faa_nas.py::_parse_nas_xml": {
+            "cc": 27,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/faa_nas.py",
+            "linea": 151
+          },
+          "live.py::build_inference_frame": {
+            "cc": 24,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 1490
+          },
+          "lineage_fallback.py::apply_lineage_fallback": {
+            "cc": 23,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/lineage_fallback.py",
+            "linea": 155
+          },
+          "live.py::_add_v7_wind_features": {
+            "cc": 23,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 1761
+          },
+          "training_store.py::prepare_silver_training_data": {
+            "cc": 22,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 1968
+          },
+          "gdp_scraper.py::_refresh": {
+            "cc": 17,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/feature_engineering_v7/gdp_scraper.py",
+            "linea": 169
+          },
+          "training_store.py::publish_pending_outbox": {
+            "cc": 17,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 1216
+          },
+          "data.py::load_master": {
+            "cc": 16,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/data.py",
+            "linea": 87
+          },
+          "training_store.py::_coerce_parquet_frame": {
+            "cc": 16,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 1070
+          },
+          "live_job.py::main": {
+            "cc": 13,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/live_job.py",
+            "linea": 467
+          },
+          "live.py::fetch_iem_obs": {
+            "cc": 12,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 554
+          },
+          "live.py::compute_adsb_holding_min": {
+            "cc": 12,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 1181
+          },
+          "pipeline.py::prepare_dataset": {
+            "cc": 12,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/pipeline.py",
+            "linea": 54
+          },
+          "build_v7_dataset.py::main": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/feature_engineering_v7/build_v7_dataset.py",
+            "linea": 60
+          },
+          "live.py::chain_walk_inbound": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 790
+          },
+          "live.py::compute_adsb_eta_delay": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/live.py",
+            "linea": 1082
+          },
+          "training_store.py::enqueue_prediction_snapshots": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 572
+          },
+          "training_store.py::_upload_create_only": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/ontimeai/training_store.py",
+            "linea": 1118
+          },
+          "predict.py::prepare_inference_frame": {
+            "cc": 11,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-backend/predict.py",
+            "linea": 34
+          }
+        }
+      },
       "cc_radon": {
-        "bloques": 587,
-        "promedio": 6.41,
-        "sobre_10": 94,
-        "sobre_15": 49,
-        "sobre_20": 24,
-        "sobre_30": 9,
+        "bloques": 383,
+        "promedio": 5.93,
+        "sobre_10": 46,
+        "sobre_15": 24,
+        "sobre_20": 11,
+        "sobre_30": 5,
         "top": [
           {
             "cc": 157,
@@ -101,34 +211,10 @@
             "linea": 1481
           },
           {
-            "cc": 45,
-            "archivo": "scripts/backtest_bts.py",
-            "nombre": "main",
-            "linea": 60
-          },
-          {
-            "cc": 45,
-            "archivo": "evaluar_recalibrado.py",
-            "nombre": "main",
-            "linea": 93
-          },
-          {
             "cc": 41,
             "archivo": "ontimeai/faa_nas.py",
             "nombre": "_parse_nas_xml",
             "linea": 151
-          },
-          {
-            "cc": 40,
-            "archivo": "scripts/data_quality_scorecard.py",
-            "nombre": "compute_scorecard",
-            "linea": 32
-          },
-          {
-            "cc": 35,
-            "archivo": "live_metrics.py",
-            "nombre": "main",
-            "linea": 59
           },
           {
             "cc": 34,
@@ -141,12 +227,6 @@
             "archivo": "ontimeai/live.py",
             "nombre": "build_inference_frame",
             "linea": 1490
-          },
-          {
-            "cc": 30,
-            "archivo": "unbiased_sample_live/live_pull_multi.py",
-            "nombre": "main",
-            "linea": 120
           },
           {
             "cc": 29,
@@ -162,23 +242,59 @@
           },
           {
             "cc": 28,
-            "archivo": "scripts/materialize_live_training.py",
-            "nombre": "main",
-            "linea": 482
-          },
-          {
-            "cc": 28,
             "archivo": "ontimeai/live.py",
             "nombre": "_add_v7_wind_features",
             "linea": 1761
           },
           {
-            "cc": 27,
-            "archivo": "scripts/bts_ground_truth_eval.py",
-            "nombre": "main",
-            "linea": 42
+            "cc": 26,
+            "archivo": "ontimeai/lineage_fallback.py",
+            "nombre": "apply_lineage_fallback",
+            "linea": 155
+          },
+          {
+            "cc": 23,
+            "archivo": "ontimeai/live.py",
+            "nombre": "aeroapi_to_flight_row",
+            "linea": 676
+          },
+          {
+            "cc": 22,
+            "archivo": "api.py",
+            "nombre": "_flight_row_to_dict",
+            "linea": 1145
+          },
+          {
+            "cc": 20,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "enqueue_prediction_snapshots",
+            "linea": 572
+          },
+          {
+            "cc": 20,
+            "archivo": "feature_engineering_v7/adsb_lineage.py",
+            "nombre": "get_prev_flight_features",
+            "linea": 205
+          },
+          {
+            "cc": 19,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "enqueue_recent_outcomes",
+            "linea": 758
+          },
+          {
+            "cc": 19,
+            "archivo": "ontimeai/training_store.py",
+            "nombre": "_upload_create_only",
+            "linea": 1118
           }
         ]
+      },
+      "tests": {
+        "total": 544,
+        "fallidos": 0,
+        "omitidos": 4,
+        "aprobados": 540
       },
       "meta": {
         "commit": "416eef8",
@@ -208,12 +324,37 @@
           "ontimeai_scrapper/opensky_client.py": 27.4
         }
       },
+      "cc_ruff": {
+        "sobre_umbral": 4,
+        "funciones": {
+          "harvester.py::_run_once": {
+            "cc": 24,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-scrapper/ontimeai_scrapper/harvester.py",
+            "linea": 301
+          },
+          "lineage_cache.py::select_tails_to_hydrate": {
+            "cc": 24,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-scrapper/ontimeai_scrapper/lineage_cache.py",
+            "linea": 338
+          },
+          "db.py::reconcile_fr24_flight_aliases": {
+            "cc": 16,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-scrapper/ontimeai_scrapper/db.py",
+            "linea": 659
+          },
+          "fr24_http.py::fetch_aircraft_history": {
+            "cc": 12,
+            "archivo": "/Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/.tmp/wt-scrapper/ontimeai_scrapper/fr24_http.py",
+            "linea": 60
+          }
+        }
+      },
       "cc_radon": {
-        "bloques": 102,
-        "promedio": 6.2,
-        "sobre_10": 17,
-        "sobre_15": 7,
-        "sobre_20": 5,
+        "bloques": 87,
+        "promedio": 6.03,
+        "sobre_10": 12,
+        "sobre_15": 6,
+        "sobre_20": 4,
         "sobre_30": 3,
         "top": [
           {
@@ -241,12 +382,6 @@
             "linea": 659
           },
           {
-            "cc": 21,
-            "archivo": "scripts/validate_sources.py",
-            "nombre": "main",
-            "linea": 521
-          },
-          {
             "cc": 18,
             "archivo": "ontimeai_scrapper/fr24_client.py",
             "nombre": "get_airport_page",
@@ -259,18 +394,6 @@
             "linea": 60
           },
           {
-            "cc": 15,
-            "archivo": "scripts/validate_sources.py",
-            "nombre": "check_faa_master",
-            "linea": 357
-          },
-          {
-            "cc": 14,
-            "archivo": "scripts/analyze_future_legs.py",
-            "nombre": "main",
-            "linea": 46
-          },
-          {
             "cc": 14,
             "archivo": "ontimeai_scrapper/opensky_client.py",
             "nombre": "_normalize_state",
@@ -281,12 +404,6 @@
             "archivo": "ontimeai_scrapper/fr24_client.py",
             "nombre": "normalize_actual",
             "linea": 343
-          },
-          {
-            "cc": 12,
-            "archivo": "scripts/validate_sources.py",
-            "nombre": "check_fr24_airport",
-            "linea": 136
           },
           {
             "cc": 12,
@@ -305,8 +422,38 @@
             "archivo": "ontimeai_scrapper/airplanes_live_client.py",
             "nombre": "_normalize",
             "linea": 89
+          },
+          {
+            "cc": 11,
+            "archivo": "ontimeai_scrapper/opensky_client.py",
+            "nombre": "get_states_bbox",
+            "linea": 74
+          },
+          {
+            "cc": 10,
+            "archivo": "ontimeai_scrapper/harvester.py",
+            "nombre": "harvest_atl_anchor",
+            "linea": 80
+          },
+          {
+            "cc": 10,
+            "archivo": "ontimeai_scrapper/fr24_horario.py",
+            "nombre": "horario_futuro",
+            "linea": 111
+          },
+          {
+            "cc": 9,
+            "archivo": "ontimeai_scrapper/fr24_client.py",
+            "nombre": "_status_flags",
+            "linea": 202
           }
         ]
+      },
+      "tests": {
+        "total": 80,
+        "fallidos": 0,
+        "omitidos": 0,
+        "aprobados": 80
       },
       "meta": {
         "commit": "2697284",
@@ -317,12 +464,12 @@
     "frontend": {
       "cobertura": {
         "lineas_pct": 17.6,
-        "lineas": 2533,
+        "lineas": 2534,
         "lineas_cubiertas": 446,
-        "ramas_pct": 13.72,
-        "ramas": 2630,
+        "ramas_pct": 13.71,
+        "ramas": 2633,
         "ramas_cubiertas": 361,
-        "funciones_pct": 10.23,
+        "funciones_pct": 10.22,
         "por_archivo": {
           "proxy.ts": 70,
           "app/apple-icon.png": 100,
@@ -437,6 +584,7 @@
           "components/viajero/boton-guardar.tsx": 0,
           "components/viajero/buscador-vuelo.tsx": 0,
           "components/viajero/detalle-viajero.tsx": 0,
+          "components/viajero/home-viajero-view.tsx": 0,
           "components/viajero/home-viajero.tsx": 0,
           "components/viajero/mis-vuelos-view.tsx": 0,
           "components/viajero/proximos-vuelos.tsx": 0,
@@ -466,12 +614,113 @@
           "lib/native/session.ts": 0
         }
       },
+      "cc_eslint": {
+        "funciones": 1218,
+        "promedio": 2.34,
+        "sobre_10": 36,
+        "sobre_15": 17,
+        "sobre_20": 4,
+        "top": [
+          {
+            "cc": 32,
+            "archivo": "components/cascada-card.tsx",
+            "nombre": "Function 'CascadaCard'",
+            "linea": 71
+          },
+          {
+            "cc": 31,
+            "archivo": "app/tesis/pruebas/page.tsx",
+            "nombre": "Function 'TestCasesViewer'",
+            "linea": 158
+          },
+          {
+            "cc": 23,
+            "archivo": "app/api/ota/updates/route.ts",
+            "nombre": "Async function 'POST'",
+            "linea": 116
+          },
+          {
+            "cc": 22,
+            "archivo": "components/ui/chart.tsx",
+            "nombre": "Arrow function",
+            "linea": 202
+          },
+          {
+            "cc": 20,
+            "archivo": "components/prediction-evolution.tsx",
+            "nombre": "Function 'PredictionEvolution'",
+            "linea": 18
+          },
+          {
+            "cc": 19,
+            "archivo": "hooks/use-real-flight-tracks.ts",
+            "nombre": "Function 'flightToTrack'",
+            "linea": 36
+          },
+          {
+            "cc": 19,
+            "archivo": "components/flights-table.tsx",
+            "nombre": "Function 'FlightsTableView'",
+            "linea": 84
+          },
+          {
+            "cc": 19,
+            "archivo": "components/flights-table.tsx",
+            "nombre": "Function 'FlightRow'",
+            "linea": 336
+          },
+          {
+            "cc": 19,
+            "archivo": "app/weather/page.tsx",
+            "nombre": "Function 'WeatherPage'",
+            "linea": 31
+          },
+          {
+            "cc": 19,
+            "archivo": "app/reports/page.tsx",
+            "nombre": "Async function 'ReportsPage'",
+            "linea": 38
+          },
+          {
+            "cc": 18,
+            "archivo": "components/flight-detail-view.tsx",
+            "nombre": "Function 'FlightDetailView'",
+            "linea": 37
+          },
+          {
+            "cc": 18,
+            "archivo": "app/tesis/pruebas/page.tsx",
+            "nombre": "Function 'EndpointCard'",
+            "linea": 303
+          },
+          {
+            "cc": 17,
+            "archivo": "app/tesis/weather/page.tsx",
+            "nombre": "Function 'TesisWeatherPage'",
+            "linea": 18
+          },
+          {
+            "cc": 16,
+            "archivo": "lib/weather-api.ts",
+            "nombre": "Function 'deriveImpact'",
+            "linea": 168
+          },
+          {
+            "cc": 16,
+            "archivo": "lib/api.ts",
+            "nombre": "Async function 'get'",
+            "linea": 324
+          }
+        ]
+      },
       "tests": {
         "total": 233,
-        "archivos": 25
+        "aprobados": 233,
+        "fallidos": 0,
+        "archivos": 74
       },
       "meta": {
-        "commit": "c9aa055",
+        "commit": "b68a6c2",
         "ref": "origin/main",
         "fecha": "2026-10-22"
       }
