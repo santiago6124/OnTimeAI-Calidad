@@ -21,7 +21,7 @@ que se muestra es un run real de GitHub Actions o un archivo de este repo.
 | Min | Qué se muestra | Dónde |
 |---|---|---|
 | 0-2 | El nivel declarado y la línea de base del 22/10: cobertura, complejidad, tests | `docs/PLAN_DE_PRUEBAS.md` §2, `mediciones/2026-10-22-antes/resumen.md` |
-| 2-5 | Un PR nuevo en vivo: agregar una función con complejidad 12 a `api.py`, push, y el CI en rojo en "Complejidad ciclomática" con el nombre de la función. Después revertir y verde | Backend, rama `demo/gate-en-vivo` |
+| 2-5 | Un PR nuevo en vivo: la rama `demo/gate-en-vivo` ya tiene un commit con `ontimeai/demo_calidad.py` (complejidad 11). Abrir el PR en vivo con `gh pr create --repo santiago6124/OnTimeAI-Backend --head demo/gate-en-vivo --base feat/refactor-complejidad-medido --title "demo: gate en vivo" --body "no mergear"`; el CI falla en "Complejidad ciclomática" con `clasificar_demora_para_la_demo CC=11`. Después `git revert HEAD`, push, y verde. Cerrar el PR sin mergear | Backend |
 | 5-7 | El run rojo que detectó un problema real: `F821` en `adsb_lineage.py`, el issue #90 con pasos, esperado y obtenido, y el test que falla en el commit padre | `docs/EVIDENCIA_CI.md`, issue #90, `mediciones/evidencia/DEF-01-*.txt` |
 | 7-9 | Despliegue nuevo: el run de `Deploy` del último merge y el `Smoke` que lo siguió, siete checks contra Cloud Run | Actions del Backend |
 | 9-11 | Stress y soak: el run de `stress.yml`, el resumen con p95 y tasa de error por escenario, los umbrales en el script | Actions del Backend, `k6/` |
