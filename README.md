@@ -35,3 +35,8 @@ Cada corrida crea un worktree temporal del repo en `origin/main` (o `--ref`),
 corre la suite con cobertura de líneas y ramas, mide complejidad ciclomática y
 escribe `mediciones/<carpeta>/raw/` más `resumen.md` y `resumen.json`. Los
 números del informe salen de esos resúmenes, nunca se tipean a mano.
+
+Definición de cobertura: se mide sobre **el código desplegado** de cada repo
+(lo que copian sus Dockerfiles; en el Frontend, `src/`), con líneas y ramas.
+Es el mismo alcance que el gate de complejidad y que `[tool.coverage.run]
+source` del CI, así que el número local y el del pipeline coinciden.

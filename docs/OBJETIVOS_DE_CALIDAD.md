@@ -40,6 +40,6 @@ sostiene. Las columnas "al inicio" y "al cierre" se llenan desde
 | OU-02 | AUC 0,79 / Brier 0,195 sobre `proba_delay` (medición del 2026-09-06, antes del calibrador post-cadena) | | |
 | OU-03 | sin medir | | |
 | OE-01 | Backend ≈ 4 min, Scrapper ≈ 1 min, Frontend ≈ 2 min | | |
-| OE-03 | 39,5 % / 50,6 % / 17,6 % | | |
+| OE-03 | 52,6 % / 50,7 % / 17,6 % de líneas (código desplegado) | | |
 | OE-04 | 21 / 4 / 36 | | |
 | OE-05 | 15 de los últimos 15 fixes del Backend con test | | |

@@ -1,0 +1,8 @@
+===== ROJO: test de regresión contra el código sin corregir =====
+E       NameError: name 'download_faa_registry' is not defined
+feature_engineering_v7/adsb_lineage.py:367: NameError
+FAILED tests/test_adsb_lineage.py::test_setup_descarga_y_construye_el_mapa_sin_explotar
+1 failed in 0.27s
+===== VERDE: mismo test con la corrección =====
+..................                                                       [100%]
+18 passed in 1.12s

@@ -48,14 +48,14 @@ en sí.
 Se declara **Nivel 2, prototipo parcial**: el sistema corre en producción y en
 las tiendas, pero la calibración del modelo, la fase 4 (inferencia desde el
 buffer FR24) y las apps siguen en validación, y la cobertura medida al inicio
-(39,5 % / 50,6 % / 17,6 %) no se acerca al 80 % que exige el Nivel 3.
+(52,6 % / 50,7 % / 17,6 % de líneas sobre el código desplegado) no se acerca al 80 % que exige el Nivel 3.
 
 | Meta | Exigido para Nivel 2 | Cómo se cumple | Verificación |
 |---|---|---|---|
 | Pipeline | compilación, pruebas, análisis estático, cobertura, quality gate, reporte automático | `ci.yml` de cada repo | runs en GitHub Actions |
 | Quality gate | bloquea bugs críticos, duplicación > 5 %, cobertura sobre código nuevo < 80 % | `ruff`/ESLint en reglas de error, `jscpd --threshold 5`, `diff-cover --fail-under 80` | paso rojo en el PR |
 | Cobertura sobre código nuevo | 80 % | `diff-cover` contra `origin/main` | paso rojo en el PR |
-| Cobertura sobre código existente | 60 % | trinquete `--cov-fail-under` que sólo sube; tests nuevos sobre los módulos con más fixes | `mediciones/` antes y después |
+| Cobertura sobre código existente | 60 % | trinquete `fail_under` que sólo sube (Backend 50 % combinado); tests nuevos sobre los módulos con más fixes. Se mide sobre **el código desplegado**: lo que copian los Dockerfiles | `mediciones/` antes y después |
 | Smoke test | ejecutado por el pipeline tras el despliegue | job `smoke` al final de cada `deploy.yml` | run del deploy |
 | Integración externa | una probada contra entorno real | GCS con CAS contra bucket de QA | workflow `integration.yml` |
 | Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml` (stress 3 min, soak 10 min) | artifacts y resumen del run |
@@ -142,7 +142,7 @@ formulario "Defecto" y se indexan en [DEFECTOS.md](DEFECTOS.md).
 
 | Métrica | Tipo | Fuente | Objetivo |
 |---|---|---|---|
-| Cobertura de líneas y ramas por repo | producto | `mediciones/` y artifacts del CI | ≥ 60 % líneas al cierre; no baja nunca |
+| Cobertura de líneas y ramas por repo (código desplegado) | producto | `mediciones/` y artifacts del CI | ≥ 60 % líneas al cierre; no baja nunca |
 | Funciones con complejidad > 10 | producto | gate de complejidad | sólo baja |
 | Duplicación | producto | jscpd | ≤ 5 % |
 | Defectos por módulo | producto | registro de defectos | concentración conocida (`api.py`) |

@@ -2,8 +2,8 @@
 
 | Repo | Commit | Tests | Cobertura líneas | Cobertura ramas | Funciones > 10 (gate) | Promedio CC (radon) | > 20 (radon) |
 |---|---|---|---|---|---|---|---|
-| backend | `416eef8` | 544 | 39.5 % (3869/9801) | 33.6 % | 21 | 5.93 | 11 |
-| scrapper | `2697284` | 80 | 50.6 % (655/1295) | 33.4 % | 4 | 6.03 | 4 |
+| backend | `416eef8` | 544 | 52.6 % (3449/6553) | 42.8 % | 21 | 5.93 | 11 |
+| scrapper | `2697284` | 80 | 50.7 % (656/1295) | 33.7 % | 4 | 6.03 | 4 |
 | frontend | `b68a6c2` | 233 | 17.6 % (446/2534) | 13.71 % | 36 | 2.34 | 4 |
 
 ## backend: funciones más complejas

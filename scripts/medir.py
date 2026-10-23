@@ -36,6 +36,11 @@ REPOS = {
         # Lo que copian los tres Dockerfiles: es el alcance del gate.
         "productivo": ["api.py", "predict.py", "live_pull.py", "live_job.py", "watchdog.py",
                        "ontimeai", "feature_engineering_v7", "scripts/prune_db.py"],
+        # Cobertura: exactamente lo desplegado, igual que `[tool.coverage.run]
+        # source` del repo. Sin esto coverage contaría los scripts de análisis,
+        # que no se despliegan, y el número no sería el del CI.
+        "cov": ["api", "predict", "live_pull", "live_job", "watchdog", "ontimeai",
+                "feature_engineering_v7", "scripts.prune_db"],
         "env": {"JWT_SECRET_KEY": "medicion", "API_USERNAME": "medicion", "API_PASSWORD": "medicion",
                 "API_USERNAME_VIEWER": "viewer", "API_PASSWORD_VIEWER": "viewer"},
     },
@@ -43,6 +48,9 @@ REPOS = {
         "ruta": TESIS / "OnTimeAI-Scrapper",
         "venv": HUB / ".venvs" / "scrapper",
         "productivo": ["ontimeai_scrapper"],
+        # Lo que copia Dockerfile.harvester; scripts/validate_sources.py es una
+        # herramienta de desarrollo y queda fuera.
+        "cov": ["ontimeai_scrapper"],
         "env": {},
     },
     "frontend": {
@@ -84,8 +92,8 @@ def medir_python(nombre: str, cfg: dict, wt: Path, raw: Path) -> None:
     covrc = raw / f".coveragerc-{nombre}"
     covrc.write_text("[run]\nbranch = True\nomit =\n    tests/*\n    */site-packages/*\n")
     print(f"[{nombre}] pytest con cobertura…", flush=True)
-    r = sh([str(py), "-m", "pytest", "-p", "no:cacheprovider", "-q",
-            f"--cov=.", f"--cov-config={covrc}", "--cov-branch",
+    r = sh([str(py), "-m", "pytest", "-p", "no:cacheprovider", "-q", "-o", "addopts=",
+            *[f"--cov={c}" for c in cfg["cov"]], f"--cov-config={covrc}", "--cov-branch",
             f"--cov-report=xml:{raw / f'cobertura-{nombre}.xml'}",
             f"--junitxml={raw / f'junit-{nombre}.xml'}"], cwd=wt, env=cfg["env"], check=False)
     (raw / f"pytest-{nombre}.log").write_text(r.stdout[-20000:] + r.stderr[-5000:])
