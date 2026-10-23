@@ -42,3 +42,15 @@ que se muestra es un run real de GitHub Actions o un archivo de este repo.
 - ¿Qué garantiza el CAS y qué pasó el 2026-06-08? (`docs/CONTINGENCIA.md`.)
 - ¿Cómo sabemos que la cobertura del informe es la del pipeline?
   (`scripts/medir.py` usa el mismo `source` que `pyproject.toml`.)
+
+## Después de mergear (cierre de las métricas)
+
+1. Scrapper: con #23 mergeado el paquete está en 61 % combinado; subir
+   `fail_under` de 46 a 60 en `pyproject.toml` (el trinquete sólo sube).
+2. Frontend: si el PR de cobertura de `lib` y handlers entra, subir los
+   `thresholds` de `vitest.config.mts` a los valores nuevos.
+3. Backend: subir `fail_under` al entero inferior del total nuevo tras los PRs
+   de cobertura y refactor.
+4. `python scripts/medir.py <repo> --carpeta 2026-10-26-despues` para los tres
+   repos, `python scripts/metricas_proceso.py`, y `informe/build.sh` para
+   regenerar el PDF con esos números (sección 6 del informe).
