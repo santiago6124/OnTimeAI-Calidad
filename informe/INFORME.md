@@ -61,7 +61,7 @@ fixes del Backend, 78 % del Scrapper).
 | Cobertura sobre código existente | 60 % | Backend 52,6 → **61,1 %** de líneas; Scrapper 50,7 → **64,8 %**; Frontend 17,6 → 32,9 % (medido con todos los PRs aplicados, §6) | **Backend y Scrapper sí; Frontend no**; trinquetes instalados en los tres para que no baje |
 | Smoke test | ejecutado por el pipeline tras el despliegue | `smoke.yml` con `workflow_run` tras `Deploy`: siete checks contra Cloud Run; verificado contra producción en 7 s | **sí** |
 | Integración externa | una probada contra entorno real | compare-and-swap contra el GCS real en el bucket de QA `ontimeai-prod-qa`, por Workload Identity, en 5,6 s | **sí** |
-| Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml`: smoke (1 VU), stress (0 → 20 → 50 VU, 3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200 vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s, 0 % de errores, checks 100 %; umbrales `http_req_failed < 1 %`, checks > 99 %, p95 < 30 s (stress) y < 35 s (soak), ≈ 2× lo medido. Runs 40011348475 (PR) y 40011382323 (con soak) | **sí**, y midió por primera vez la capacidad real (DEF-15) |
+| Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml`: smoke (1 VU), stress (0 → 20 → 50 VU, 3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200 vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s; en CI (run 40011382323, soak de 10 min): p95 190 ms / 3,2 s / 1,7 s, 22 req/s, deriva del soak +10 %; 0 % de errores y checks 100 % en todos; umbrales `http_req_failed < 1 %`, checks > 99 %, p95 < 30 s (stress) y < 35 s (soak) | **sí**, y midió por primera vez la capacidad real (DEF-15) |
 | Plan de pruebas y riesgos | versionado, criterios de entrada y salida, riesgos P × I, trazabilidad requisito → caso → defecto | `docs/PLAN_DE_PRUEBAS.md` 1.0, `RIESGOS.md`, `TRAZABILIDAD.md` | **sí** |
 | Defectos | pasos, esperado, obtenido, vinculados a su caso | formulario "Defecto" en los tres repos; DEF-01 como issue #90; nueve retroactivos trazados a PR y test | **sí** |
 | Herramienta nueva | cinco pasos | k6: `docs/HERRAMIENTA_K6.md` con requisitos, mercado, PoC, matriz ponderada y despliegue incremental | **sí** |
@@ -241,9 +241,10 @@ mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
   cambios de CSS y layout: ahí la pirámide necesita un nivel de navegador que
   quedó fuera del alcance por el orden de corte.
 - **El stress midió por primera vez la capacidad de la API, y es baja:** un
-  proceso sirve ~6,5 req/s del mix del dashboard y satura con 1-2 usuarios
-  concurrentes; p95 de 11 s en la rampa a 50 VUs, sin errores (hace cola, no
-  se cae). Producción corre ese mismo proceso en una instancia. Los umbrales
+  proceso sirve ~6,5 req/s del mix del dashboard en la Mac y 22 req/s en el
+  runner, y satura con pocos usuarios concurrentes; p95 de 11 s (Mac) y 3,2 s
+  (runner) en la rampa a 50 VUs, sin errores (hace cola, no se cae); el soak
+  de 10 minutos no mostró fuga. Producción corre ese mismo proceso en una instancia. Los umbrales
   de k6 se fijaron al doble de lo medido para proteger que siga sin fallar,
   no como objetivo de servicio; el objetivo OU-03 queda como no cumplido y
   el hallazgo registrado (DEF-15) con su siguiente paso: cachear la ventana
