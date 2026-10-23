@@ -109,14 +109,27 @@ iteraciones, RPS, p50/p95/p99 y tasa de error: sí, `scripts/k6_resumen.py` en
 el step summary; (4) menos de 20 minutos en CI: sí (smoke + stress en el PR;
 soak de 10 min sólo en `main` y a mano); (5) producción intacta: sí.
 
-Runs en CI: [40011348475](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011348475)
-(PR, smoke + stress, verde) y [40011382323](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011382323)
-(a mano desde la rama, con soak de 10 min).
+En CI (ubuntu-latest, Python 3.11), run [40011382323](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011382323)
+disparado a mano desde la rama con el soak completo de 10 minutos; el run del
+PR [40013672721](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40013672721)
+(smoke + stress) dio casi lo mismo:
+
+| Escenario | VUs máx | Iteraciones | req/s | p50 | p95 | p99 | Errores HTTP | Checks | Umbrales |
+|---|---|---|---|---|---|---|---|---|---|
+| smoke | 1 | 16 | 4,7 | 60 ms | 190 ms | 200 ms | 0 % | 100 % | OK (2/2) |
+| stress | 50 | 496 | 22,2 | 518 ms | 3,2 s | 3,8 s | 0 % | 100 % | OK (3/3) |
+| soak (10 min) | 20 | 1.788 | 23,7 | 607 ms | 1,7 s | 1,9 s | 0 % | 100 % | OK (3/3) |
+
+El runner sirvió el mix tres veces más rápido que la Mac (22 req/s contra
+6,5), y el soak de 10 minutos no mostró fuga: el p95 de la iteración completa
+pasó de 6,7 s en el primer minuto a 7,4 s en el último (+10 %), sin errores.
 
 Umbrales finales: `http_req_failed < 1 %` y `checks > 99 %` en los tres;
 p95 de `http_req_duration` < 30 s en stress y < 35 s en soak, ≈ 2× la peor
-medición local, porque los runners son más lentos y dos corridas iguales
-difirieron bastante. **No son objetivos de servicio.** Lo que la PoC mostró es
+medición local, porque dos corridas iguales en la Mac difirieron bastante
+(p95 17,5 s y 6,8 s en el mismo soak); en el runner quedan a ~9× de lo medido,
+y el doc del repo explica cómo bajarlos a 2× del runner si se quiere un gate
+más fino. **No son objetivos de servicio.** Lo que la PoC mostró es
 que un proceso sirve ~6,5 req/s de este mix y satura con 1-2 VUs: p95 0,9 s
 a 3 VUs, 3,6 s a 10, 7-17 s a 20, 11,1 s en la rampa a 50, siempre sin errores.
 Es el hallazgo DEF-15 ([DEFECTOS.md](DEFECTOS.md)); cuando se cachee la ventana

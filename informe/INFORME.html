@@ -196,10 +196,11 @@ producción en 7 s</td>
 <td>ejecutado, con resultados y umbrales</td>
 <td>k6 en <code>stress.yml</code>: smoke (1 VU), stress (0 → 20 → 50 VU,
 3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200
-vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s, 0 % de errores, checks
-100 %; umbrales <code>http_req_failed &lt; 1 %</code>, checks &gt; 99 %,
-p95 &lt; 30 s (stress) y &lt; 35 s (soak), ≈ 2× lo medido. Runs
-40011348475 (PR) y 40011382323 (con soak)</td>
+vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s; en CI (run 40011382323,
+soak de 10 min): p95 190 ms / 3,2 s / 1,7 s, 22 req/s, deriva del soak
++10 %; 0 % de errores y checks 100 % en todos; umbrales
+<code>http_req_failed &lt; 1 %</code>, checks &gt; 99 %, p95 &lt; 30 s
+(stress) y &lt; 35 s (soak)</td>
 <td><strong>sí</strong>, y midió por primera vez la capacidad real
 (DEF-15)</td>
 </tr>
@@ -478,14 +479,15 @@ los fixes trae test porque son cambios de CSS y layout: ahí la pirámide
 necesita un nivel de navegador que quedó fuera del alcance por el orden
 de corte.</li>
 <li><strong>El stress midió por primera vez la capacidad de la API, y es
-baja:</strong> un proceso sirve ~6,5 req/s del mix del dashboard y
-satura con 1-2 usuarios concurrentes; p95 de 11 s en la rampa a 50 VUs,
-sin errores (hace cola, no se cae). Producción corre ese mismo proceso
-en una instancia. Los umbrales de k6 se fijaron al doble de lo medido
-para proteger que siga sin fallar, no como objetivo de servicio; el
-objetivo OU-03 queda como no cumplido y el hallazgo registrado (DEF-15)
-con su siguiente paso: cachear la ventana activa por ciclo y volver a
-medir con el mismo script.</li>
+baja:</strong> un proceso sirve ~6,5 req/s del mix del dashboard en la
+Mac y 22 req/s en el runner, y satura con pocos usuarios concurrentes;
+p95 de 11 s (Mac) y 3,2 s (runner) en la rampa a 50 VUs, sin errores
+(hace cola, no se cae); el soak de 10 minutos no mostró fuga. Producción
+corre ese mismo proceso en una instancia. Los umbrales de k6 se fijaron
+al doble de lo medido para proteger que siga sin fallar, no como
+objetivo de servicio; el objetivo OU-03 queda como no cumplido y el
+hallazgo registrado (DEF-15) con su siguiente paso: cachear la ventana
+activa por ciclo y volver a medir con el mismo script.</li>
 <li><strong>Las pruebas nuevas encontraron cinco defectos</strong> más
 allá del que detectó el gate: dos en el Backend (DEF-11, DEF-12), dos en
 el Frontend (DEF-13, DEF-14) y el de capacidad (DEF-15), todos en código
