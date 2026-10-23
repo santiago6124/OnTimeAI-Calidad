@@ -54,7 +54,7 @@ fixes del Backend, 78 % del Scrapper).
 | Pipeline | compilación, pruebas, análisis estático, cobertura, quality gate, reporte automático | los tres `ci.yml` corren ruff/ESLint, gate de complejidad, jscpd, tests con cobertura de líneas y ramas, diff-cover y un resumen en el job con artifacts | **sí** |
 | Quality gate | bloquea bugs críticos, duplicación > 5 %, cobertura sobre código nuevo < 80 % | ruff E9/F63/F7/F82 y ESLint en error; jscpd `--threshold 5`; diff-cover `--fail-under 80` | **sí**, y el primer run del Backend lo demostró con un bug real |
 | Cobertura sobre código nuevo | 80 % | 96 % en el PR del quality gate del Backend, 96 % en el del Scrapper, 94 % en el refactor | **sí** |
-| Cobertura sobre código existente | 60 % | Backend 52,6 → 53,5 %; Scrapper 50,7 → 50,6 %; Frontend 17,6 → 17,6 % (parcial del 23/10) | **no** en ninguno de los tres al cierre; trinquetes instalados para que no baje (ver §6) |
+| Cobertura sobre código existente | 60 % | Scrapper 47 → **61 %** combinado con el PR #23 (`backfill_outcomes.py` 0 → 92 %); Backend 52,6 → 53,5 % y Frontend 17,6 % al cierre parcial, con PRs de cobertura en curso | **Scrapper sí; Backend y Frontend no**; trinquetes instalados para que no baje (ver §6) |
 | Smoke test | ejecutado por el pipeline tras el despliegue | `smoke.yml` con `workflow_run` tras `Deploy`: siete checks contra Cloud Run; verificado contra producción en 7 s | **sí** |
 | Integración externa | una probada contra entorno real | compare-and-swap contra el GCS real en el bucket de QA `ontimeai-prod-qa`, por Workload Identity, en 5,6 s | **sí** |
 | Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6: smoke, stress 0 → 50 VU y soak 20 VU × 10 min contra la API con base fixture; VER_K6 | VER_K6_CUMPLIDO |
@@ -188,10 +188,20 @@ test de regresión del defecto. Mover el total exige entrar en los módulos
 grandes sin tests (`live_pull.py`, `faa_nas.py`, `harvester.py`, `src/lib/api.ts`),
 que es el trabajo de los PRs de cobertura en curso (ver §7).
 
-Mejora medida: `_coerce_parquet_frame` (Backend) pasó de complejidad 16 (ruff) y
-C (18, radon) a 5 y A (5), repartida en tres helpers de 3 a 8, con los 51 tests
-del módulo en verde y la baseline del gate de 21 a 20 funciones exentas
-(`mediciones/evidencia/MEJORA-01-coerce-parquet-frame.md`).
+Mejora medida antes y después, con las herramientas del gate (PR Backend #94;
+detalle en `mediciones/evidencia/MEJORA-0{1,2,3}-*.md`):
+
+| Función (Backend) | ruff C901 antes → después | radon antes → después | Tests del módulo |
+|---|---|---|---|
+| `_coerce_parquet_frame` | 16 → 5 | C (18) → A (5) | 51 verdes |
+| `_upload_create_only` | 11 → 3 | C (19) → A (3) | 51 verdes |
+| `apply_lineage_fallback` | 23 → 4 | D (26) → A (4) | 10 verdes |
+| **Baseline del gate** | **21 → 18 exentas** | | suite completa: 558 verdes |
+
+Se eligieron por combinar complejidad alta con cobertura previa alta (81 % y
+93 %): la red de tests existía. En el tercer refactor el primer intento dejó
+afuera el final de la función y los tests lo marcaron en el acto. Por lo
+mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
 
 # 7. Análisis crítico
 
