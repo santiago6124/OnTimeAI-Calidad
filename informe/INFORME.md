@@ -103,8 +103,8 @@ rango y concentración), duplicación, cobertura de sentencia y de decisión y
 bugs de análisis estático por repo, y explica la decisión de no depender de
 SonarQube para bloquear merges. La métrica de proceso (lead time de PR, fixes
 con test, duración del CI) y la de proyecto (PRs por semana) se calculan con
-`scripts/metricas_proceso.py`. La mejora medida antes/después es el refactor de
-`_coerce_parquet_frame`: complejidad 16 → 5 (§6).
+`scripts/metricas_proceso.py`. Las mejoras medidas antes/después son tres refactors
+en el Backend (complejidad 16 → 5, 11 → 3 y 23 → 4; baseline 21 → 18, §6).
 
 ## 3.5 Pruebas dinámicas
 
