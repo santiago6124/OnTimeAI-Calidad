@@ -8,9 +8,9 @@ que se muestra es un run real de GitHub Actions o un archivo de este repo.
 
 1. Mergear los PRs en este orden (cada merge a `main` del Backend despliega a
    Cloud Run y dispara el smoke):
-   - Backend: #89 (gate) → #91 (cobertura y quality gate) → `refactor` → #93 (casos) → #92 (smoke) → `stress-k6`.
-   - Scrapper: #19 (gate) → #20 (cobertura y quality gate) → #21 (valores límite) → `integracion-gcs-real`.
-   - Frontend: #74 (gate) → cobertura y quality gate.
+   - Backend: #89 (gate) → #91 (cobertura y quality gate) → #94 (tres refactors medidos) → #93 (casos CE/VL/TD) → #96 (cobertura: faa_nas, predict, watchdog, live_job, live) → #92 (smoke) → #95 (k6). Los tres primeros están apilados: al mergear #89, GitHub reapunta #91 a `main`, y así sucesivamente.
+   - Scrapper: #19 (gate) → #20 (cobertura y quality gate) → #21 (valores límite) → #23 (cobertura: backfill, clientes ADS-B, harvester) → #22 (integración GCS real).
+   - Frontend: #74 (gate) → #79 (cobertura y quality gate) → #80 (cobertura: lib, handlers, hooks; trinquete 32/24/20/32).
 2. Correr `python scripts/medir.py <repo> --carpeta 2026-10-26-despues` para
    los tres repos y `python scripts/metricas_proceso.py`.
 3. Tener abiertas las pestañas: Actions de los tres repos, `docs/EVIDENCIA_CI.md`,
