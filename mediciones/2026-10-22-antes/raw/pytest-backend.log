@@ -39,8 +39,4 @@ tests/test_shap_nativo.py::test_coincide_con_shap_treeexplainer
 ______________ coverage: platform darwin, python 3.12.13-final-0 _______________
 
 Coverage XML written to file /Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/mediciones/2026-10-22-antes/raw/cobertura-backend.xml
-=========================== short test summary info ============================
-SKIPPED [1] tests/test_validacion_calibrado.py:192: no está generado: 4year_v9_recal_20261011
-SKIPPED [1] tests/test_validacion_calibrado.py:205: no está generado: 4year_v9_recal_20261011
-SKIPPED [1] tests/test_validacion_calibrado.py:215: no está generado: 4year_v9_recal_20261011
-SKIPPED [1] tests/test_validacion_calibrado.py:236: artefacto no generado
+540 passed, 4 skipped, 21 warnings in 22.91s
