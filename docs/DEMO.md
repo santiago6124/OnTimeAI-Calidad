@@ -6,15 +6,12 @@ que se muestra es un run real de GitHub Actions o un archivo de este repo.
 
 ## Antes de la demo
 
-1. Mergear los PRs en este orden (cada merge a `main` del Backend despliega a
-   Cloud Run y dispara el smoke):
-   - Backend: #89 (gate) → #91 (cobertura y quality gate) → #94 (tres refactors medidos) → #93 (casos CE/VL/TD) → #96 (cobertura: faa_nas, predict, watchdog, live_job, live) → #92 (smoke) → #95 (k6). Los tres primeros están apilados: al mergear #89, GitHub reapunta #91 a `main`, y así sucesivamente.
-   - Scrapper: #19 (gate) → #20 (cobertura y quality gate) → #21 (valores límite) → #23 (cobertura: backfill, clientes ADS-B, harvester) → #22 (integración GCS real).
-   - Frontend: #74 (gate) → #79 (cobertura y quality gate) → #80 (cobertura: lib, handlers, hooks; trinquete 32/24/20/32).
-2. Correr `python scripts/medir.py <repo> --carpeta 2026-10-26-despues` para
-   los tres repos y `python scripts/metricas_proceso.py`.
-3. Tener abiertas las pestañas: Actions de los tres repos, `docs/EVIDENCIA_CI.md`,
-   `mediciones/2026-10-22-antes/resumen.md` y la carpeta `despues`.
+Los 16 PRs del TP ya están mergeados en `main` de los tres repos (2026-10-23),
+los trinquetes subidos al valor real y la medición definitiva en
+`mediciones/2026-10-23-main`. Para la demo sólo hace falta tener abiertas las
+pestañas: Actions de los tres repos, `docs/EVIDENCIA_CI.md`,
+`mediciones/2026-10-22-antes/resumen.md` y `mediciones/2026-10-23-main/resumen.md`.
+Si algún merge nuevo entra antes del 26, repetir `scripts/medir.py` y `informe/build.sh`.
 
 ## Minuto a minuto
 
@@ -43,14 +40,9 @@ que se muestra es un run real de GitHub Actions o un archivo de este repo.
 - ¿Cómo sabemos que la cobertura del informe es la del pipeline?
   (`scripts/medir.py` usa el mismo `source` que `pyproject.toml`.)
 
-## Después de mergear (cierre de las métricas)
+## Cierre hecho el 2026-10-23
 
-1. Scrapper: con #23 mergeado el paquete está en 61 % combinado; subir
-   `fail_under` de 46 a 60 en `pyproject.toml` (el trinquete sólo sube).
-2. Frontend: si el PR de cobertura de `lib` y handlers entra, subir los
-   `thresholds` de `vitest.config.mts` a los valores nuevos.
-3. Backend: subir `fail_under` al entero inferior del total nuevo tras los PRs
-   de cobertura y refactor.
-4. `python scripts/medir.py <repo> --carpeta 2026-10-26-despues` para los tres
-   repos, `python scripts/metricas_proceso.py`, y `informe/build.sh` para
-   regenerar el PDF con esos números (sección 6 del informe).
+1. Scrapper: `fail_under` subido de 46 a 60 (PR #24; 60,7 % combinado en `main`).
+2. Frontend: `thresholds` en 32/24/20/32 desde el PR #80.
+3. Backend: `fail_under` subido de 50 al entero inferior del total en `main` (PR `ci/trinquete-cobertura`).
+4. Medición definitiva en `mediciones/2026-10-23-main`; el informe y el PDF usan esos números.

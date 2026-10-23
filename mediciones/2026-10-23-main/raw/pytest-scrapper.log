@@ -1,0 +1,7 @@
+........................................................................ [ 55%]
+.........................s................................               [100%]
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.13-final-0 _______________
+
+Coverage XML written to file /Users/santiagocarranza/Documents/Documentos/2026/Tesis/OnTimeAI-Calidad/mediciones/2026-10-23-main/raw/cobertura-scrapper.xml
+129 passed, 1 skipped in 1.20s

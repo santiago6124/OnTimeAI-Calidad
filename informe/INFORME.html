@@ -51,12 +51,12 @@ esfuerzo sostenido), un smoke post-deploy contra Cloud Run y una prueba
 de integración real contra Google Cloud Storage, se diseñan casos con
 clases de equivalencia, valores límite y tablas de decisión, se registra
 un defecto real detectado por el gate con contraste rojo/verde, y se
-mide una mejora de complejidad antes y después. Con todo aplicado, la
-cobertura del código desplegado pasó de 52,6 a 61,1 % en el Backend, de
-50,7 a 64,8 % en el Scrapper y de 17,6 a 32,9 % en el Frontend, con
-1.390 tests (antes 857); tres funciones salieron de la baseline de
-complejidad, y las pruebas nuevas encontraron cinco defectos más. Todos
-los números salen de los runs del pipeline y de
+mide una mejora de complejidad antes y después. Con los 16 PRs
+mergeados, la cobertura del código desplegado pasó de 52,6 a 61,1 % en
+el Backend, de 50,7 a 64,8 % en el Scrapper y de 17,6 a 37,0 % en el
+Frontend, con 1.452 tests (antes 857); tres funciones salieron de la
+baseline de complejidad, y las pruebas nuevas encontraron cinco defectos
+más. Todos los números salen de los runs del pipeline y de
 <code>scripts/medir.py</code> del repositorio hub
 <code>OnTimeAI-Calidad</code>.</p>
 <p>Repositorio del TP: <a
@@ -171,10 +171,11 @@ bug real</td>
 <td>Cobertura sobre código existente</td>
 <td>60 %</td>
 <td>Backend 52,6 → <strong>61,1 %</strong> de líneas; Scrapper 50,7 →
-<strong>64,8 %</strong>; Frontend 17,6 → 32,9 % (medido con todos los
-PRs aplicados, §6)</td>
+<strong>64,8 %</strong>; Frontend 17,6 → 37,0 % (medido sobre
+<code>main</code> tras los merges, §6)</td>
 <td><strong>Backend y Scrapper sí; Frontend no</strong>; trinquetes
-instalados en los tres para que no baje</td>
+subidos al valor real (Scrapper 60, Backend 59, Frontend
+32/24/20/32)</td>
 </tr>
 <tr>
 <td>Smoke test</td>
@@ -339,10 +340,13 @@ críticos (ruff E9/F63/F7/F82 o ESLint + <code>tsc</code>), duplicación
 La tabla completa de runs rojos y verdes con lo que detectó cada uno
 está en <code>docs/EVIDENCIA_CI.md</code>.</p>
 <h1 id="6-evolución-de-las-métricas">6. Evolución de las métricas</h1>
-<p>Medición "después" del 2026-10-23 con <strong>todos los PRs del TP
-aplicados</strong> en una rama local de integración por repo
-(<code>scripts/medir.py --ref medicion/despues</code>, misma definición
-y mismo script que la línea de base; se repite tras los merges):</p>
+<p>Medición "después" del 2026-10-23 sobre
+<strong><code>origin/main</code> de cada repo, con los 16 PRs del TP ya
+mergeados</strong> (<code>mediciones/2026-10-23-main</code>, mismo
+script y misma definición que la línea de base). En el Frontend,
+<code>main</code> recibió además cuatro PRs ajenos al TP ese mismo día,
+que suman código y tests; los números son los de <code>main</code> tal
+como quedó:</p>
 <table>
 <thead>
 <tr>
@@ -376,12 +380,12 @@ y mismo script que la línea de base; se repite tras los merges):</p>
 </tr>
 <tr>
 <td>Frontend</td>
-<td>233 → <strong>489</strong></td>
-<td>17,6 → <strong>32,9 %</strong></td>
-<td>13,7 → <strong>24,9 %</strong></td>
-<td>36 → 36</td>
+<td>233 → <strong>551</strong></td>
+<td>17,6 → <strong>37,0 %</strong></td>
+<td>13,7 → <strong>27,3 %</strong></td>
+<td>36 → 35</td>
 <td>4 → 4</td>
-<td>2,34 → 2,05</td>
+<td>2,34 → 1,97</td>
 </tr>
 </tbody>
 </table>
@@ -449,15 +453,16 @@ cobertura).</p>
 <h1 id="7-análisis-crítico">7. Análisis crítico</h1>
 <ul>
 <li><strong>La cobertura del 60 % se alcanzó en el Backend (61,1 %) y en
-el Scrapper (64,8 %), no en el Frontend (32,9 %).</strong> En el
+el Scrapper (64,8 %), no en el Frontend (37,0 %).</strong> En el
 Frontend el hueco son las páginas y los componentes, que necesitan un
 entorno de navegador que quedó fuera por el orden de corte; lo que sí
 subió al 100 % es la capa de datos (<code>src/lib/api.ts</code>) y los
 handlers. Lo que impide retroceder quedó en los tres: trinquetes por
-repo (Backend 50 % combinado, Scrapper 46, Frontend 32/24/20/32, a subir
-tras los merges) y 80 % sobre cada línea nueva. El hueco mayor que queda
-es el mismo que concentra la complejidad: <code>live_pull.py:main</code>
-(72, 6 % de cobertura), que por eso no se refactorizó.</li>
+repo subidos al valor real tras los merges (Backend 59 % combinado,
+Scrapper 60, Frontend 32/24/20/32) y 80 % sobre cada línea nueva. El
+hueco mayor que queda es el mismo que concentra la complejidad:
+<code>live_pull.py:main</code> (72, 6 % de cobertura), que por eso no se
+refactorizó.</li>
 <li><strong>La definición de cobertura importa.</strong> El primer run
 midió sólo los módulos que los tests importan (61 %), la primera
 medición local contó dos docenas de scripts de análisis que no se
@@ -507,7 +512,7 @@ prueba contra el servicio real y la API tiene por primera vez números de
 carga con umbrales. Las decisiones se apoyaron en mediciones propias
 (línea de base, defectos agrupados, complejidad concentrada, incidentes
 previos). En dos días la cobertura del código desplegado subió 8,5
-puntos en el Backend, 14,1 en el Scrapper y 15,3 en el Frontend, y ese
+puntos en el Backend, 14,1 en el Scrapper y 19,4 en el Frontend, y ese
 trabajo encontró cinco defectos reales además del que detectó el gate.
 Lo que no se cumplió (60 % en el Frontend, latencia de la API bajo
 carga) quedó medido, registrado y con el mecanismo para no retroceder.
@@ -560,7 +565,7 @@ cada repo</td>
 <tr>
 <td>Mediciones antes y después</td>
 <td><code>mediciones/2026-10-22-antes</code>,
-<code>mediciones/2026-10-23-despues</code>,
+<code>mediciones/2026-10-23-main</code> (tras los merges),
 <code>mediciones/evidencia/</code>,
 <code>mediciones/proceso-*.md</code></td>
 </tr>
