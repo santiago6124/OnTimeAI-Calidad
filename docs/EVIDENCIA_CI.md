@@ -42,3 +42,18 @@ de GitHub Actions como fuente.
 | 2026-10-23 | Backend | #96 | [40013521172](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40013521172) | verde | 22 tests más sobre `ontimeai/live.py` (AeroAPI, paginación, holding ADS-B, v8); con todo aplicado el Backend llega al 61,1 % de líneas |
 | 2026-10-23 | Backend | [#95](https://github.com/santiago6124/OnTimeAI-Backend/pull/95) k6 stress y soak | [40011382323](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011382323) | verde | dispatch desde la rama con soak de 10 min: stress p95 3,2 s a 22 req/s, soak p95 1,7 s con deriva +10 %, 0 % de errores; umbrales OK |
 | 2026-10-23 | Backend | #95 | [40013672721](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40013672721) | verde | run del PR (smoke + stress) sobre el commit final; CI de tests también verde (563 aprobados) |
+
+## Tras los merges a `main` (2026-10-23)
+
+| Fecha | Repo | Workflow | Run | Resultado | Qué muestra |
+|---|---|---|---|---|---|
+| 2026-10-23 | Backend | Deploy → Smoke (`workflow_run`) | [40021794808](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40021794808) | verde | smoke disparado automáticamente tras el deploy: 7 de 7 checks contra la revisión `ontimeai-backend-00077-q42` recién desplegada |
+| 2026-10-23 | Backend | CI en `main` | [40021365101](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40021365101) | verde | trinquete de cobertura a 59 con 59,02 % medido en CI (PR #101); después se dejó en 58 con un punto de margen |
+| 2026-10-23 | Scrapper | Integración (`push` a `main`) | [40019663794](https://github.com/santiago6124/OnTimeAI-Scrapper/actions/runs/40019663794) | verde | compare-and-swap contra el GCS real, disparado por el merge de #22 |
+| 2026-10-23 | Scrapper | CI en `main` | [40019892833](https://github.com/santiago6124/OnTimeAI-Scrapper/actions/runs/40019892833) | verde | trinquete de cobertura a 60 con 60,7 % medido (PR #24) |
+| 2026-10-23 | Frontend | CI en `main` | [40019991726](https://github.com/santiago6124/OnTimeAI-Frontend/actions/runs/40019991726) | verde | gates y cobertura con trinquete 32/24/20/32 sobre `main` tras #80 |
+
+Los deploys intermedios del Backend aparecen como `cancelled`: con varios merges
+seguidos, GitHub conserva un solo run pendiente por grupo de concurrencia y
+reemplaza el anterior por el más nuevo; el último de cada tanda desplegó y su
+smoke corrió.
