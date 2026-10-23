@@ -23,6 +23,8 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 | DEF-10 | 2026-10-22 | Frontend | alta | el bundle iOS no compilaba desde el PR #55 y no cubría el perfil Viajero | RNF-04 | CP-MOB-01 | PR #73, `build-mobile.mjs --strict` sumado a `ci.yml` |
 | DEF-11 | 2026-10-23 | Backend | media | el CLI `predict.py` no puede puntuar vuelos sin historial (`pd.NA` en dtype `object`) | RF-01 | CP-COB-02 | [#97](https://github.com/santiago6124/OnTimeAI-Backend/issues/97); caracterizado en PR #96, pendiente de fix |
 | DEF-12 | 2026-10-23 | Backend | baja | el parser de `faa_nas` no lee los minutos anidados del feed real; el módulo no se usa en producción | RF-01 | CP-COB-01 | [#98](https://github.com/santiago6124/OnTimeAI-Backend/issues/98); caracterizado en PR #96, decisión pendiente |
+| DEF-13 | 2026-10-23 | Frontend | baja | `toUTCDate` devuelve `Invalid Date` con offsets negativos | RF-05 | CP-COB-FE | [#82](https://github.com/santiago6124/OnTimeAI-Frontend/issues/82); caracterizado en PR #80 |
+| DEF-14 | 2026-10-23 | Frontend | media | `POST /api/auth/login` devuelve 200 con cuerpo de error si el backend no manda token | RF-04 | CP-COB-FE | [#81](https://github.com/santiago6124/OnTimeAI-Frontend/issues/81); caracterizado en PR #80 |
 
 ## Fichas
 
@@ -111,6 +113,14 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 - **Pasos:** parsear el XML real del feed de la FAA (`Min`/`Max` anidados en `Arrival_Departure`).
 - **Esperado:** banderas, motivo y minutos. **Obtenido:** banderas y motivo sin minutos.
 - **Causa raíz:** el parser busca `Min`/`Max` como hijos directos; además ningún módulo productivo importa `faa_nas` (`live.py` usa `GdpClient`). Decisión pendiente: corregir y conectar, o retirar de la imagen.
+
+### DEF-13 · toUTCDate con offsets negativos
+
+- **Entorno:** local (PR #80). **Pasos:** `toUTCDate("…-03:00")`. **Esperado:** fecha válida en UTC. **Obtenido:** `Invalid Date`; sólo reconoce `Z` y `+`. Latente: el backend serializa siempre `+00:00`.
+
+### DEF-14 · login del Frontend responde 200 con error
+
+- **Entorno:** local (PR #80). **Pasos:** backend responde 200 sin `access_token` a `POST /auth/login`. **Esperado:** 401 o 502 con `detail`. **Obtenido:** 200 con `{ "detail": "Credenciales incorrectas" }` por `login.status || 401`. El cliente podría creer que entró.
 
 ## Lo que muestra el registro
 
