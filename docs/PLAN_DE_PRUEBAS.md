@@ -55,7 +55,7 @@ buffer FR24) y las apps siguen en validación, y la cobertura medida al inicio
 | Pipeline | compilación, pruebas, análisis estático, cobertura, quality gate, reporte automático | `ci.yml` de cada repo | runs en GitHub Actions |
 | Quality gate | bloquea bugs críticos, duplicación > 5 %, cobertura sobre código nuevo < 80 % | `ruff`/ESLint en reglas de error, `jscpd --threshold 5`, `diff-cover --fail-under 80` | paso rojo en el PR |
 | Cobertura sobre código nuevo | 80 % | `diff-cover` contra `origin/main` | paso rojo en el PR |
-| Cobertura sobre código existente | 60 % | trinquete `fail_under` que sólo sube (Backend 50 % combinado); tests nuevos sobre los módulos con más fixes. Se mide sobre **el código desplegado**: lo que copian los Dockerfiles | `mediciones/` antes y después |
+| Cobertura sobre código existente | 60 % | trinquete `fail_under` que sólo sube (Backend 50 % combinado, Scrapper 46, Frontend 32/24/20/32); tests de caracterización sobre los módulos sin cobertura. Se mide sobre **el código desplegado**: lo que copian los Dockerfiles. Resultado al 2026-10-23: Backend 61,1 %, Scrapper 64,8 %, Frontend 32,9 % | `mediciones/2026-10-22-antes` y `2026-10-23-despues` |
 | Smoke test | ejecutado por el pipeline tras el despliegue | job `smoke` al final de cada `deploy.yml` | run del deploy |
 | Integración externa | una probada contra entorno real | GCS con CAS contra bucket de QA | workflow `integration.yml` |
 | Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml` (stress 3 min, soak 10 min) | artifacts y resumen del run |
