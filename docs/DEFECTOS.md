@@ -21,6 +21,8 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 | DEF-08 | 2026-10-19 | Scrapper | alta | el horizonte de 6 h tiraba el 90 % del itinerario ya descargado | RF-07 | CP-SCR-02 | PR #18, `tests/test_future_legs.py` |
 | DEF-09 | 2026-10-21 | Frontend | baja | el barrido de "reducir movimiento" apagaba la cortina entera | RNF-06 | CP-UI-01 | PR #71 (sin test automatizado: CSS; verificación manual) |
 | DEF-10 | 2026-10-22 | Frontend | alta | el bundle iOS no compilaba desde el PR #55 y no cubría el perfil Viajero | RNF-04 | CP-MOB-01 | PR #73, `build-mobile.mjs --strict` sumado a `ci.yml` |
+| DEF-11 | 2026-10-23 | Backend | media | el CLI `predict.py` no puede puntuar vuelos sin historial (`pd.NA` en dtype `object`) | RF-01 | CP-COB-02 | [#97](https://github.com/santiago6124/OnTimeAI-Backend/issues/97); caracterizado en PR #96, pendiente de fix |
+| DEF-12 | 2026-10-23 | Backend | baja | el parser de `faa_nas` no lee los minutos anidados del feed real; el módulo no se usa en producción | RF-01 | CP-COB-01 | [#98](https://github.com/santiago6124/OnTimeAI-Backend/issues/98); caracterizado en PR #96, decisión pendiente |
 
 ## Fichas
 
@@ -95,10 +97,27 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 - **Obtenido:** `TS2307: Cannot find module '@/lib/server-auth'`; tres semanas de merges en verde porque `ci.yml` no compilaba el bundle.
 - **Causa raíz:** el script poda `server-auth.ts` pero `server-profile.ts` lo importaba; el typecheck de `next build` lo revisa aunque ninguna página lo alcance. PR #73 suma el build móvil al CI (regresión estructural) y publica el OTA 1.0.3.
 
+### DEF-11 · el CLI predict.py no puede puntuar vuelos sin historial
+
+- **Entorno:** local. **Detectado por:** tests de caracterización de `predict.py` (PR #96).
+- **Pasos:** CSV de vuelos futuros sin `ARR_DELAY` ni eventos UTC; `python predict.py …`.
+- **Esperado:** puntúa imputando las features de linaje con el fallback cold-deck.
+- **Obtenido:** `ValueError: pandas dtypes must be int, float or bool` (features creadas con `pd.NA` en `object`).
+- **Alcance:** el pipeline live no pasa por ese camino; producción no está afectada. Test con `pytest.raises` listo para el contraste rojo/verde del fix.
+
+### DEF-12 · el parser de faa_nas no lee los minutos anidados y el módulo es código muerto
+
+- **Entorno:** local. **Detectado por:** tests de caracterización de `ontimeai/faa_nas.py` (PR #96, que lo llevó de 0 a 100 % de cobertura).
+- **Pasos:** parsear el XML real del feed de la FAA (`Min`/`Max` anidados en `Arrival_Departure`).
+- **Esperado:** banderas, motivo y minutos. **Obtenido:** banderas y motivo sin minutos.
+- **Causa raíz:** el parser busca `Min`/`Max` como hijos directos; además ningún módulo productivo importa `faa_nas` (`live.py` usa `GdpClient`). Decisión pendiente: corregir y conectar, o retirar de la imagen.
+
 ## Lo que muestra el registro
 
-- Nueve de diez defectos tienen test de regresión en el mismo PR; el único sin
-  test es CSS (DEF-09).
+- Nueve de los diez primeros tienen test de regresión en el mismo PR; el único sin
+  test es CSS (DEF-09). DEF-11 y DEF-12 aparecieron al escribir tests de
+  caracterización para subir la cobertura: los tests encontraron defectos en código
+  que llevaba meses sin ejecutarse.
 - Cinco de diez vivieron en producción (DEF-02, 03, 04, 06, 07) y dos de esos
   se introdujeron en PRs propios (#70 → DEF-04, #40 → DEF-06): el argumento
   para el smoke post-deploy y para el gate de cobertura sobre código nuevo.
