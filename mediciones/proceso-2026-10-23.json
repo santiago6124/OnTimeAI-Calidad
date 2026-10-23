@@ -1,0 +1,62 @@
+{
+  "fecha": "2026-10-23",
+  "repos": {
+    "OnTimeAI-Backend": {
+      "prs_mergeados": 69,
+      "lead_time_h_mediana": 0.1,
+      "lead_time_h_p90": 3.8,
+      "fixes": 35,
+      "fixes_con_test": 27,
+      "fixes_con_test_pct": 77.1,
+      "ci_min_mediana": 1.6,
+      "prs_por_semana_ultimas_8": [
+        0,
+        8,
+        38,
+        7,
+        5,
+        3,
+        6,
+        1
+      ]
+    },
+    "OnTimeAI-Scrapper": {
+      "prs_mergeados": 17,
+      "lead_time_h_mediana": 0.2,
+      "lead_time_h_p90": 21.9,
+      "fixes": 9,
+      "fixes_con_test": 7,
+      "fixes_con_test_pct": 77.8,
+      "ci_min_mediana": 0.4,
+      "prs_por_semana_ultimas_8": [
+        0,
+        0,
+        7,
+        4,
+        3,
+        0,
+        1,
+        2
+      ]
+    },
+    "OnTimeAI-Frontend": {
+      "prs_mergeados": 58,
+      "lead_time_h_mediana": 0.0,
+      "lead_time_h_p90": 0.4,
+      "fixes": 26,
+      "fixes_con_test": 8,
+      "fixes_con_test_pct": 30.8,
+      "ci_min_mediana": 1.1,
+      "prs_por_semana_ultimas_8": [
+        3,
+        4,
+        12,
+        8,
+        5,
+        6,
+        2,
+        18
+      ]
+    }
+  }
+}
