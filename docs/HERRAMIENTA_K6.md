@@ -88,5 +88,37 @@ runner, se ajustan documentando el motivo antes de seguir.
 
 ## PoC medida
 
-(Se completa con la tabla del PR `feat/stress-k6`: VUs, iteraciones, RPS,
-p50/p95/p99, tasa de error y resultado de umbrales por escenario, local y en CI.)
+PR Backend #95 (`feat/stress-k6`): scripts en `k6/`, workflow `stress.yml`,
+`scripts/make_fixture_db.py` (200 vuelos de hoy sembrados, reproducible por
+semilla), `docs/STRESS_K6.md`. Un proceso de `uvicorn`, como el `CMD` del
+Dockerfile; cada VU hace login una vez y repite el mix de un usuario del
+dashboard (nueve requests) con un segundo de pausa.
+
+Local (2026-10-23, Mac, k6 v2.3.0, soak acortado a 3 min para la PoC):
+
+| Escenario | VUs máx | Iteraciones | req/s | p50 | p95 | p99 | Errores HTTP | Checks | Umbrales |
+|---|---|---|---|---|---|---|---|---|---|
+| smoke | 1 | 20 | 5,8 | 37 ms | 135 ms | 325 ms | 0 % | 100 % | OK (2/2) |
+| stress | 50 | 142 | 7,1 | 1,7 s | 11,1 s | 12,6 s | 0 % | 100 % | OK (3/3) |
+| soak | 20 | 163 | 6,7 | 2,1 s | 6,8 s | 10,7 s | 0 % | 100 % | OK (3/3) |
+
+Criterios de éxito del paso 3: (1) tres escenarios con JSON por escenario
+(`k6/resultados/`): sí; (2) un umbral violado falla el job (exit 99): sí,
+probado con el trinquete de thresholds del script; (3) resumen con VUs,
+iteraciones, RPS, p50/p95/p99 y tasa de error: sí, `scripts/k6_resumen.py` en
+el step summary; (4) menos de 20 minutos en CI: sí (smoke + stress en el PR;
+soak de 10 min sólo en `main` y a mano); (5) producción intacta: sí.
+
+Runs en CI: [40011348475](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011348475)
+(PR, smoke + stress, verde) y [40011382323](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40011382323)
+(a mano desde la rama, con soak de 10 min).
+
+Umbrales finales: `http_req_failed < 1 %` y `checks > 99 %` en los tres;
+p95 de `http_req_duration` < 30 s en stress y < 35 s en soak, ≈ 2× la peor
+medición local, porque los runners son más lentos y dos corridas iguales
+difirieron bastante. **No son objetivos de servicio.** Lo que la PoC mostró es
+que un proceso sirve ~6,5 req/s de este mix y satura con 1-2 VUs: p95 0,9 s
+a 3 VUs, 3,6 s a 10, 7-17 s a 20, 11,1 s en la rampa a 50, siempre sin errores.
+Es el hallazgo DEF-15 ([DEFECTOS.md](DEFECTOS.md)); cuando se cachee la ventana
+activa por ciclo, los umbrales bajan y la herramienta mide la ganancia con el
+mismo script.
