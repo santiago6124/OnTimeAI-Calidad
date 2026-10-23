@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.12.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Grupo OnTimeAI" />
+  <title>OnTimeAI: TP Integrador de Calidad de Software</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="informe.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">OnTimeAI: TP Integrador de Calidad de Software</h1>
+<p class="subtitle">Trabajo Práctico Integrador · Calidad de Software ·
+UCC · 2026</p>
+<p class="author">Grupo OnTimeAI</p>
+<p class="date">26 de octubre de 2026</p>
+</header>
+<h1 id="resumen">Resumen</h1>
+<p>OnTimeAI predice demoras de llegada de los vuelos que salen de
+Atlanta con un modelo LightGBM alimentado por un harvester de FR24, y
+las muestra en un dashboard web y en apps móviles. Son tres repositorios
+desplegados a Cloud Run. Este informe aplica a esa tesis el proceso de
+calidad de la materia: se declara el <strong>Nivel 2 (prototipo
+parcial)</strong>, se mide una línea de base el 22/10, se instalan en
+los tres pipelines gates de complejidad, bugs de análisis estático,
+duplicación y cobertura con trinquete, se incorporan k6 (stress y
+esfuerzo sostenido), un smoke post-deploy contra Cloud Run y una prueba
+de integración real contra Google Cloud Storage, se diseñan casos con
+clases de equivalencia, valores límite y tablas de decisión, se registra
+un defecto real detectado por el gate con contraste rojo/verde, y se
+mide una mejora de complejidad antes y después. Con todo aplicado, la
+cobertura del código desplegado pasó de 52,6 a 61,1 % en el Backend, de
+50,7 a 64,8 % en el Scrapper y de 17,6 a 32,9 % en el Frontend, con
+1.390 tests (antes 857); tres funciones salieron de la baseline de
+complejidad, y las pruebas nuevas encontraron cinco defectos más. Todos
+los números salen de los runs del pipeline y de
+<code>scripts/medir.py</code> del repositorio hub
+<code>OnTimeAI-Calidad</code>.</p>
+<p>Repositorio del TP: <a
+href="https://github.com/santiago6124/OnTimeAI-Calidad">https://github.com/santiago6124/OnTimeAI-Calidad</a>.
+Repos del sistema: <code>OnTimeAI-Backend</code>,
+<code>OnTimeAI-Scrapper</code>, <code>OnTimeAI-Frontend</code> (mismo
+dueño).</p>
+<h1 id="1-nivel-declarado-y-estado-inicial">1. Nivel declarado y estado
+inicial</h1>
+<p>Se declara <strong>Nivel 2, prototipo parcial</strong>. El sistema
+corre en producción y en las tiendas, pero la calibración del modelo, la
+fase 4 (inferencia desde el buffer FR24) y las apps siguen en
+validación, y la cobertura medida al inicio está lejos del 80 % que
+exige el Nivel 3.</p>
+<p>Línea de base medida el 2026-10-22 sobre <code>origin/main</code> de
+cada repo, con <code>scripts/medir.py</code> (cobertura sobre <strong>el
+código desplegado</strong>: lo que copian los Dockerfiles; en el
+Frontend, <code>src/</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Commit</th>
+<th>Tests</th>
+<th>Cobertura líneas</th>
+<th>Cobertura ramas</th>
+<th>Funciones con CC &gt; 10</th>
+<th>Promedio CC</th>
+<th>CI</th>
+<th>Sonar / smoke / stress</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td><code>416eef8</code></td>
+<td>544</td>
+<td>52,6 %</td>
+<td>42,8 %</td>
+<td>21</td>
+<td>5,93</td>
+<td>sí (99 verdes / 1 rojo)</td>
+<td>no / no / no</td>
+</tr>
+<tr>
+<td>Scrapper</td>
+<td><code>2697284</code></td>
+<td>80</td>
+<td>50,7 %</td>
+<td>33,7 %</td>
+<td>4</td>
+<td>6,03</td>
+<td>sí (36 / 1)</td>
+<td>no / no / no</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td><code>b68a6c2</code></td>
+<td>233</td>
+<td>17,6 %</td>
+<td>13,7 %</td>
+<td>36</td>
+<td>2,34</td>
+<td>sí (100 / 0)</td>
+<td>no / no / no</td>
+</tr>
+</tbody>
+</table>
+<p>Lo que ya existía y se reutilizó: CI en cada push y PR, deploy
+automático a Cloud Run por Workload Identity, un vigía con alertas por
+Telegram, fallback FR24 → OpenSky, compare-and-swap por generación sobre
+la base compartida, y la práctica de un test de regresión por cada fix
+desde septiembre (77 % de los fixes del Backend, 78 % del Scrapper).</p>
+<h1 id="2-metas-del-nivel-cumplidas-y-no-cumplidas">2. Metas del nivel:
+cumplidas y no cumplidas</h1>
+<table>
+<thead>
+<tr>
+<th>Aspecto (Nivel 2)</th>
+<th>Exigido</th>
+<th>Resultado</th>
+<th>Cumplido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline</td>
+<td>compilación, pruebas, análisis estático, cobertura, quality gate,
+reporte automático</td>
+<td>los tres <code>ci.yml</code> corren ruff/ESLint, gate de
+complejidad, jscpd, tests con cobertura de líneas y ramas, diff-cover y
+un resumen en el job con artifacts</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Quality gate</td>
+<td>bloquea bugs críticos, duplicación &gt; 5 %, cobertura sobre código
+nuevo &lt; 80 %</td>
+<td>ruff E9/F63/F7/F82 y ESLint en error; jscpd
+<code>--threshold 5</code>; diff-cover <code>--fail-under 80</code></td>
+<td><strong>sí</strong>, y el primer run del Backend lo demostró con un
+bug real</td>
+</tr>
+<tr>
+<td>Cobertura sobre código nuevo</td>
+<td>80 %</td>
+<td>96 % en el PR del quality gate del Backend, 96 % en el del Scrapper,
+94 % en el refactor</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Cobertura sobre código existente</td>
+<td>60 %</td>
+<td>Backend 52,6 → <strong>61,1 %</strong> de líneas; Scrapper 50,7 →
+<strong>64,8 %</strong>; Frontend 17,6 → 32,9 % (medido con todos los
+PRs aplicados, §6)</td>
+<td><strong>Backend y Scrapper sí; Frontend no</strong>; trinquetes
+instalados en los tres para que no baje</td>
+</tr>
+<tr>
+<td>Smoke test</td>
+<td>ejecutado por el pipeline tras el despliegue</td>
+<td><code>smoke.yml</code> con <code>workflow_run</code> tras
+<code>Deploy</code>: siete checks contra Cloud Run; verificado contra
+producción en 7 s</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Integración externa</td>
+<td>una probada contra entorno real</td>
+<td>compare-and-swap contra el GCS real en el bucket de QA
+<code>ontimeai-prod-qa</code>, por Workload Identity, en 5,6 s</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Stress y esfuerzo sostenido</td>
+<td>ejecutado, con resultados y umbrales</td>
+<td>k6 en <code>stress.yml</code>: smoke (1 VU), stress (0 → 20 → 50 VU,
+3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200
+vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s, 0 % de errores, checks
+100 %; umbrales <code>http_req_failed &lt; 1 %</code>, checks &gt; 99 %,
+p95 &lt; 30 s (stress) y &lt; 35 s (soak), ≈ 2× lo medido. Runs
+40011348475 (PR) y 40011382323 (con soak)</td>
+<td><strong>sí</strong>, y midió por primera vez la capacidad real
+(DEF-15)</td>
+</tr>
+<tr>
+<td>Plan de pruebas y riesgos</td>
+<td>versionado, criterios de entrada y salida, riesgos P × I,
+trazabilidad requisito → caso → defecto</td>
+<td><code>docs/PLAN_DE_PRUEBAS.md</code> 1.0, <code>RIESGOS.md</code>,
+<code>TRAZABILIDAD.md</code></td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Defectos</td>
+<td>pasos, esperado, obtenido, vinculados a su caso</td>
+<td>formulario "Defecto" en los tres repos; DEF-01 como issue #90; nueve
+retroactivos trazados a PR y test</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr>
+<td>Herramienta nueva</td>
+<td>cinco pasos</td>
+<td>k6: <code>docs/HERRAMIENTA_K6.md</code> con requisitos, mercado,
+PoC, matriz ponderada y despliegue incremental</td>
+<td><strong>sí</strong></td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-un-eje-por-tema">3. Un eje por tema</h1>
+<h2 id="31-introducción-a-la-calidad">3.1 Introducción a la calidad</h2>
+<p>Objetivos medibles desde el usuario (lead time de la predicción, AUC
+y Brier, p95 de la API, paridad web/iOS), desde el equipo (CI &lt; 10
+min, 80 % sobre código nuevo, trinquetes, un test por fix) y desde la
+organización (alerta en ≤ 30 min, rollback en ≤ 1 h, costo contenido):
+<code>docs/OBJETIVOS_DE_CALIDAD.md</code>. El plan de contingencia cubre
+FR24, GCS y Cloud Run con detección, modo degradado y recuperación, y
+apoya cada uno en un incidente real del proyecto (base corrupta del
+2026-06-08, proyecto GCP muerto por billing el 2026-08-19):
+<code>docs/CONTINGENCIA.md</code>.</p>
+<h2 id="32-fundamentos-del-testing">3.2 Fundamentos del testing</h2>
+<p>Los tests siguen Arrange-Act-Assert; el formulario de defecto exige
+escribir el resultado esperado antes de corregir. El contraste
+rojo/verde se hizo con un defecto real encontrado por el gate (§4). Los
+siete principios aplicados con evidencia propia están en
+<code>docs/PRINCIPIOS.md</code>: por ejemplo, el agrupamiento de
+defectos (19 de 45 fixes desde agosto en <code>api.py</code>) y la
+falacia de la ausencia de errores (un sistema sin bugs que marcaba el
+46,6 % de los vuelos como demorados cuando debía marcar el 22 %).</p>
+<h2 id="33-modelos-de-calidad-y-niveles-de-prueba">3.3 Modelos de
+calidad y niveles de prueba</h2>
+<p>La matriz ISO/IEC 25010 con evidencia para las ocho características
+está en <code>docs/ISO25010.md</code>. Top 3:
+<strong>fiabilidad</strong> (la única que ya produjo pérdida de
+servicio), <strong>adecuación funcional</strong> (la calibración rota
+convierte una buena discriminación en alertas falsas) y
+<strong>mantenibilidad</strong> (la función más compleja del sistema es
+la menos cubierta). El mapa de niveles, unitario → integración con
+dobles → integración real → sistema (k6) → aceptación (smoke), y el
+despliegue verificado en local, CI, Cloud Run y tiendas están en
+<code>docs/PLAN_DE_PRUEBAS.md</code> §3.</p>
+<h2 id="34-métricas-y-análisis-estático">3.4 Métricas y análisis
+estático</h2>
+<p><code>docs/ANALISIS_ESTATICO.md</code> interpreta tamaño, complejidad
+(distribución por rango y concentración), duplicación, cobertura de
+sentencia y de decisión y bugs de análisis estático por repo, y explica
+la decisión de no depender de SonarQube para bloquear merges. La métrica
+de proceso (lead time de PR, fixes con test, duración del CI) y la de
+proyecto (PRs por semana) se calculan con
+<code>scripts/metricas_proceso.py</code>. Las mejoras medidas
+antes/después son tres refactors en el Backend (complejidad 16 → 5, 11 →
+3 y 23 → 4; baseline 21 → 18, §6).</p>
+<h2 id="35-pruebas-dinámicas">3.5 Pruebas dinámicas</h2>
+<p><code>docs/CASOS_DE_PRUEBA.md</code> documenta 44 casos nuevos: la
+tabla de decisión de autenticación y autorización (9 filas), las clases
+de equivalencia del alta de usuarios, los valores límite de las bandas
+de riesgo (umbral y su doble, con sus vecinos) y de la cola de outcomes
+del Scrapper (29/30/31 min, 35 h y 36 h 1 min), más los casos de los
+gates, del smoke, del stress y de la integración. Todos pasaron contra
+el código actual: la API cumplía la tabla. La cobertura de decisión es
+la de ramas de la tabla de §1 y §6.</p>
+<h2 id="36-aseguramiento-de-la-calidad">3.6 Aseguramiento de la
+calidad</h2>
+<p>Plan versionado con criterios de entrada y salida
+(<code>docs/PLAN_DE_PRUEBAS.md</code>), riesgos priorizados por
+probabilidad × impacto con cuatro de nivel 15-16 que ordenan el plan
+(<code>docs/RIESGOS.md</code>), prácticas clasificadas en QA y QC
+(<code>docs/QA_VS_QC.md</code>), plantillas de caso y de defecto
+(<code>.github/ISSUE_TEMPLATE/defecto.yml</code> y
+<code>PULL_REQUEST_TEMPLATE.md</code> en los tres repos) y trazabilidad
+(<code>docs/TRAZABILIDAD.md</code>).</p>
+<h2 id="37-automatización-del-testing">3.7 Automatización del
+testing</h2>
+<p>Pirámide: unitarias (pytest, vitest), API e integración
+(<code>TestClient</code>, dobles de GCS y FR24, integración real GCS),
+sistema (k6), aceptación (smoke post-deploy). Cada defecto corregido
+deja un test de regresión; el pipeline tiene al menos una ejecución
+verde y varias rojas que detectaron problemas reales
+(<code>docs/EVIDENCIA_CI.md</code>).</p>
+<h2 id="38-herramientas-del-ecosistema">3.8 Herramientas del
+ecosistema</h2>
+<p>Mapa de herramientas por categoría
+(<code>docs/MAPA_HERRAMIENTAS.md</code>), k6 incorporado con los cinco
+pasos (<code>docs/HERRAMIENTA_K6.md</code>), registro de defectos en
+GitHub Issues con formulario, y stress y soak ejecutados por el
+pipeline.</p>
+<h1 id="4-un-defecto-real-de-rojo-a-verde">4. Un defecto real, de rojo a
+verde</h1>
+<p>El primer run del PR del quality gate del Backend (run 40005299387)
+falló en el paso "Bugs críticos" con
+<code>F821 Undefined name download_faa_registry</code> en
+<code>feature_engineering_v7/adsb_lineage.py:367</code>: el setup del
+módulo llamaba a una función que nunca existió. Causa raíz: el módulo
+nació con la descarga llamada <code>download_aircraft_db</code>, la CLI
+conservó el nombre de un borrador, nadie volvió a correr
+<code>--setup</code> y ningún test pasaba por <code>main()</code>. Se
+registró como issue #90 con severidad, entorno, pasos, esperado,
+obtenido y evidencia (DEF-01). El test de regresión
+<code>tests/test_adsb_lineage.py</code> falla en el commit padre con
+<code>NameError</code> y pasa con el fix
+(<code>mediciones/evidencia/DEF-01-adsb-lineage-rojo-verde.txt</code>);
+el run siguiente (40006159701) quedó verde con 96 % de cobertura sobre
+las líneas cambiadas.</p>
+<p>Otros rojos reales del TP: el gate de complejidad listó 21, 4 y 36
+funciones en su primer run en cada repo; el smoke contra producción
+falló su séptimo check porque <code>/cascade</code> exige autenticación
+y la documentación del workspace lo daba por público (el criterio estaba
+mal, no la API).</p>
+<h1 id="5-pipeline-y-evidencia">5. Pipeline y evidencia</h1>
+<p>Los tres <code>ci.yml</code> corren, en este orden: gate de
+complejidad (ruff C901 con baseline-trinquete, radon como reporte), bugs
+críticos (ruff E9/F63/F7/F82 o ESLint + <code>tsc</code>), duplicación
+(jscpd ≤ 5 %), tests con cobertura de líneas y ramas con
+<code>fail_under</code> trinquete, cobertura sobre líneas cambiadas
+(diff-cover ≥ 80 %), resumen en el job y artifacts. Aparte:
+<code>smoke.yml</code> (tras <code>Deploy</code>),
+<code>stress.yml</code> (k6) e <code>integration.yml</code> (GCS real).
+La tabla completa de runs rojos y verdes con lo que detectó cada uno
+está en <code>docs/EVIDENCIA_CI.md</code>.</p>
+<h1 id="6-evolución-de-las-métricas">6. Evolución de las métricas</h1>
+<p>Medición "después" del 2026-10-23 con <strong>todos los PRs del TP
+aplicados</strong> en una rama local de integración por repo
+(<code>scripts/medir.py --ref medicion/despues</code>, misma definición
+y mismo script que la línea de base; se repite tras los merges):</p>
+<table>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Tests</th>
+<th>Cobertura líneas</th>
+<th>Cobertura ramas</th>
+<th>Funciones con CC &gt; 10</th>
+<th>Funciones con CC &gt; 20 (radon)</th>
+<th>Promedio CC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>544 → <strong>771</strong></td>
+<td>52,6 → <strong>61,1 %</strong></td>
+<td>42,8 → <strong>52,0 %</strong></td>
+<td>21 → <strong>18</strong></td>
+<td>11 → 10</td>
+<td>5,93 → 5,71</td>
+</tr>
+<tr>
+<td>Scrapper</td>
+<td>80 → <strong>130</strong></td>
+<td>50,7 → <strong>64,8 %</strong></td>
+<td>33,7 → <strong>46,5 %</strong></td>
+<td>4 → 4</td>
+<td>4 → 4</td>
+<td>6,03 → 6,03</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>233 → <strong>489</strong></td>
+<td>17,6 → <strong>32,9 %</strong></td>
+<td>13,7 → <strong>24,9 %</strong></td>
+<td>36 → 36</td>
+<td>4 → 4</td>
+<td>2,34 → 2,05</td>
+</tr>
+</tbody>
+</table>
+<p>De dónde salió cada ganancia: en el Backend, 137 tests de
+caracterización sobre <code>faa_nas.py</code> (0 → 100 %),
+<code>predict.py</code> (42 → 99 %), <code>watchdog.py</code> (58 → 99
+%) y <code>live_job.py</code> (65 → 99 %), 22 sobre el cliente AeroAPI,
+la paginación, el holding ADS-B y las features v8 de
+<code>live.py</code>, 27 de la tabla de decisión de autenticación y los
+valores límite de riesgo, y los tests del gate y del defecto DEF-01. En
+el Scrapper, 25 tests sobre <code>backfill_outcomes.py</code> (0 → 92
+%), los clientes ADS-B (22 → 91-98 %) y las ramas de error del
+harvester, más 8 de valores límite. En el Frontend, 246 tests sobre
+<code>src/lib</code> (<code>api.ts</code> 36 → 100 %), los handlers de
+<code>src/app/api</code>, hooks y providers. Los 44 casos de
+equivalencia, límite y decisión ejercitan lógica que ya tenía tests, así
+que suman regresión y cobertura de decisión más que total. Lo que queda
+sin cubrir es conocido: <code>live_pull.py</code> (6 %) en el Backend,
+<code>harvester.py</code> (31 %) en el Scrapper, y páginas y componentes
+sin tests de render en el Frontend.</p>
+<p>Mejora medida antes y después, con las herramientas del gate (PR
+Backend #94; detalle en
+<code>mediciones/evidencia/MEJORA-0{1,2,3}-*.md</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Función (Backend)</th>
+<th>ruff C901 antes → después</th>
+<th>radon antes → después</th>
+<th>Tests del módulo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_coerce_parquet_frame</code></td>
+<td>16 → 5</td>
+<td>C (18) → A (5)</td>
+<td>51 verdes</td>
+</tr>
+<tr>
+<td><code>_upload_create_only</code></td>
+<td>11 → 3</td>
+<td>C (19) → A (3)</td>
+<td>51 verdes</td>
+</tr>
+<tr>
+<td><code>apply_lineage_fallback</code></td>
+<td>23 → 4</td>
+<td>D (26) → A (4)</td>
+<td>10 verdes</td>
+</tr>
+<tr>
+<td><strong>Baseline del gate</strong></td>
+<td><strong>21 → 18 exentas</strong></td>
+<td></td>
+<td>suite completa: 558 verdes</td>
+</tr>
+</tbody>
+</table>
+<p>Se eligieron por combinar complejidad alta con cobertura previa alta
+(81 % y 93 %): la red de tests existía. En el tercer refactor el primer
+intento dejó afuera el final de la función y los tests lo marcaron en el
+acto. Por lo mismo no se tocó <code>live_pull.py:main</code> (72, 6 % de
+cobertura).</p>
+<h1 id="7-análisis-crítico">7. Análisis crítico</h1>
+<ul>
+<li><strong>La cobertura del 60 % se alcanzó en el Backend (61,1 %) y en
+el Scrapper (64,8 %), no en el Frontend (32,9 %).</strong> En el
+Frontend el hueco son las páginas y los componentes, que necesitan un
+entorno de navegador que quedó fuera por el orden de corte; lo que sí
+subió al 100 % es la capa de datos (<code>src/lib/api.ts</code>) y los
+handlers. Lo que impide retroceder quedó en los tres: trinquetes por
+repo (Backend 50 % combinado, Scrapper 46, Frontend 32/24/20/32, a subir
+tras los merges) y 80 % sobre cada línea nueva. El hueco mayor que queda
+es el mismo que concentra la complejidad: <code>live_pull.py:main</code>
+(72, 6 % de cobertura), que por eso no se refactorizó.</li>
+<li><strong>La definición de cobertura importa.</strong> El primer run
+midió sólo los módulos que los tests importan (61 %), la primera
+medición local contó dos docenas de scripts de análisis que no se
+despliegan (39 %). El número que vale es sobre lo que copian los
+Dockerfiles (52,6 %), y está fijado en el <code>source</code> de
+coverage y en <code>scripts/medir.py</code> para que local y CI
+coincidan.</li>
+<li><strong>El quality gate funciona sin SaaS.</strong> Se evaluó
+SonarQube Cloud; el gate que pide la cátedra quedó dentro del pipeline,
+y Sonar puede sumarse después como tablero consumiendo los mismos
+reportes.</li>
+<li><strong>Lo que detectaron los gates fue real y barato:</strong> un
+<code>NameError</code> latente desde el primer commit de un módulo, en
+segundos de análisis estático.</li>
+<li><strong>Métricas de proceso:</strong> lead time de PR por debajo de
+una hora porque una sola persona abre y mergea; el TP introduce la
+revisión cruzada como criterio de salida. En el Frontend sólo el 31 % de
+los fixes trae test porque son cambios de CSS y layout: ahí la pirámide
+necesita un nivel de navegador que quedó fuera del alcance por el orden
+de corte.</li>
+<li><strong>El stress midió por primera vez la capacidad de la API, y es
+baja:</strong> un proceso sirve ~6,5 req/s del mix del dashboard y
+satura con 1-2 usuarios concurrentes; p95 de 11 s en la rampa a 50 VUs,
+sin errores (hace cola, no se cae). Producción corre ese mismo proceso
+en una instancia. Los umbrales de k6 se fijaron al doble de lo medido
+para proteger que siga sin fallar, no como objetivo de servicio; el
+objetivo OU-03 queda como no cumplido y el hallazgo registrado (DEF-15)
+con su siguiente paso: cachear la ventana activa por ciclo y volver a
+medir con el mismo script.</li>
+<li><strong>Las pruebas nuevas encontraron cinco defectos</strong> más
+allá del que detectó el gate: dos en el Backend (DEF-11, DEF-12), dos en
+el Frontend (DEF-13, DEF-14) y el de capacidad (DEF-15), todos en código
+que llevaba meses sin ejecutarse por un test. Quedan registrados con el
+formulario, con el caso que los reproduce, para corregirlos con
+contraste rojo/verde.</li>
+<li><strong>Riesgos que siguen abiertos:</strong> FR24 como fuente única
+con canary pendiente (RP-01), la calibración (RP-03, ya con medición
+continua) y el plazo del TP (RY-01), que obligó a dejar afuera E2E en
+navegador y el stress contra Cloud Run.</li>
+</ul>
+<h1 id="8-conclusiones">8. Conclusiones</h1>
+<p>El proceso quedó instalado donde se ejecuta: cada PR de los tres
+repos pasa por un quality gate reproducible, cada deploy del Backend es
+verificado por un smoke contra Cloud Run, la integración crítica se
+prueba contra el servicio real y la API tiene por primera vez números de
+carga con umbrales. Las decisiones se apoyaron en mediciones propias
+(línea de base, defectos agrupados, complejidad concentrada, incidentes
+previos). En dos días la cobertura del código desplegado subió 8,5
+puntos en el Backend, 14,1 en el Scrapper y 15,3 en el Frontend, y ese
+trabajo encontró cinco defectos reales además del que detectó el gate.
+Lo que no se cumplió (60 % en el Frontend, latencia de la API bajo
+carga) quedó medido, registrado y con el mecanismo para no retroceder.
+El nivel declarado se sostiene: prototipo parcial, con el pipeline de un
+prototipo avanzado.</p>
+<h1 id="anexo-dónde-está-cada-cosa">Anexo: dónde está cada cosa</h1>
+<table>
+<thead>
+<tr>
+<th>Entregable</th>
+<th>Ubicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plan de pruebas, matriz ISO 25010, trazabilidad</td>
+<td><code>docs/PLAN_DE_PRUEBAS.md</code>, <code>docs/ISO25010.md</code>,
+<code>docs/TRAZABILIDAD.md</code></td>
+</tr>
+<tr>
+<td>Código de las pruebas</td>
+<td><code>tests/</code> de cada repo; <code>k6/</code> del Backend;
+<code>scripts/smoke.sh</code>;
+<code>tests/test_integracion_gcs.py</code> del Scrapper</td>
+</tr>
+<tr>
+<td>Pipelines</td>
+<td><code>.github/workflows/{ci,smoke,stress,integration}.yml</code> en
+cada repo</td>
+</tr>
+<tr>
+<td>Reportes automáticos</td>
+<td>resumen del job y artifacts <code>calidad</code>,
+<code>complejidad</code>, <code>k6-resultados</code> de cada run</td>
+</tr>
+<tr>
+<td>Integración externa</td>
+<td><code>docs/CONTINGENCIA.md</code>, PR Scrapper #22,
+<code>docs/SMOKE.md</code> del Backend</td>
+</tr>
+<tr>
+<td>Registro de defectos</td>
+<td>issues con label <code>defecto</code> en cada repo; índice en
+<code>docs/DEFECTOS.md</code></td>
+</tr>
+<tr>
+<td>Herramienta incorporada y matriz</td>
+<td><code>docs/HERRAMIENTA_K6.md</code></td>
+</tr>
+<tr>
+<td>Mediciones antes y después</td>
+<td><code>mediciones/2026-10-22-antes</code>,
+<code>mediciones/2026-10-23-despues</code>,
+<code>mediciones/evidencia/</code>,
+<code>mediciones/proceso-*.md</code></td>
+</tr>
+<tr>
+<td>Demostración</td>
+<td><code>docs/DEMO.md</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
