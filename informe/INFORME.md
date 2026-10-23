@@ -57,7 +57,7 @@ fixes del Backend, 78 % del Scrapper).
 | Cobertura sobre código existente | 60 % | Scrapper 47 → **61 %** combinado con el PR #23 (`backfill_outcomes.py` 0 → 92 %); Backend 52,6 → 53,5 % y Frontend 17,6 % al cierre parcial, con PRs de cobertura en curso | **Scrapper sí; Backend y Frontend no**; trinquetes instalados para que no baje (ver §6) |
 | Smoke test | ejecutado por el pipeline tras el despliegue | `smoke.yml` con `workflow_run` tras `Deploy`: siete checks contra Cloud Run; verificado contra producción en 7 s | **sí** |
 | Integración externa | una probada contra entorno real | compare-and-swap contra el GCS real en el bucket de QA `ontimeai-prod-qa`, por Workload Identity, en 5,6 s | **sí** |
-| Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6: smoke, stress 0 → 50 VU y soak 20 VU × 10 min contra la API con base fixture; VER_K6 | VER_K6_CUMPLIDO |
+| Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml`: smoke (1 VU), stress (0 → 20 → 50 VU, 3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200 vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s, 0 % de errores, checks 100 %; umbrales `http_req_failed < 1 %`, checks > 99 %, p95 < 30 s (stress) y < 35 s (soak), ≈ 2× lo medido. Runs 40011348475 (PR) y 40011382323 (con soak) | **sí**, y midió por primera vez la capacidad real (DEF-15) |
 | Plan de pruebas y riesgos | versionado, criterios de entrada y salida, riesgos P × I, trazabilidad requisito → caso → defecto | `docs/PLAN_DE_PRUEBAS.md` 1.0, `RIESGOS.md`, `TRAZABILIDAD.md` | **sí** |
 | Defectos | pasos, esperado, obtenido, vinculados a su caso | formulario "Defecto" en los tres repos; DEF-01 como issue #90; nueve retroactivos trazados a PR y test | **sí** |
 | Herramienta nueva | cinco pasos | k6: `docs/HERRAMIENTA_K6.md` con requisitos, mercado, PoC, matriz ponderada y despliegue incremental | **sí** |
@@ -227,6 +227,19 @@ mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
   de salida. En el Frontend sólo el 31 % de los fixes trae test porque son
   cambios de CSS y layout: ahí la pirámide necesita un nivel de navegador que
   quedó fuera del alcance por el orden de corte.
+- **El stress midió por primera vez la capacidad de la API, y es baja:** un
+  proceso sirve ~6,5 req/s del mix del dashboard y satura con 1-2 usuarios
+  concurrentes; p95 de 11 s en la rampa a 50 VUs, sin errores (hace cola, no
+  se cae). Producción corre ese mismo proceso en una instancia. Los umbrales
+  de k6 se fijaron al doble de lo medido para proteger que siga sin fallar,
+  no como objetivo de servicio; el objetivo OU-03 queda como no cumplido y
+  el hallazgo registrado (DEF-15) con su siguiente paso: cachear la ventana
+  activa por ciclo y volver a medir con el mismo script.
+- **Las pruebas nuevas encontraron cinco defectos** más allá del que detectó
+  el gate: dos en el Backend (DEF-11, DEF-12), dos en el Frontend (DEF-13,
+  DEF-14) y el de capacidad (DEF-15), todos en código que llevaba meses sin
+  ejecutarse por un test. Quedan registrados con el formulario, con el caso
+  que los reproduce, para corregirlos con contraste rojo/verde.
 - **Riesgos que siguen abiertos:** FR24 como fuente única con canary
   pendiente (RP-01), la calibración (RP-03, ya con medición continua) y el
   plazo del TP (RY-01), que obligó a dejar afuera E2E en navegador y el

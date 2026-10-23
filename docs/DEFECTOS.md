@@ -25,6 +25,7 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 | DEF-12 | 2026-10-23 | Backend | baja | el parser de `faa_nas` no lee los minutos anidados del feed real; el módulo no se usa en producción | RF-01 | CP-COB-01 | [#98](https://github.com/santiago6124/OnTimeAI-Backend/issues/98); caracterizado en PR #96, decisión pendiente |
 | DEF-13 | 2026-10-23 | Frontend | baja | `toUTCDate` devuelve `Invalid Date` con offsets negativos | RF-05 | CP-COB-FE | [#82](https://github.com/santiago6124/OnTimeAI-Frontend/issues/82); caracterizado en PR #80 |
 | DEF-14 | 2026-10-23 | Frontend | media | `POST /api/auth/login` devuelve 200 con cuerpo de error si el backend no manda token | RF-04 | CP-COB-FE | [#81](https://github.com/santiago6124/OnTimeAI-Frontend/issues/81); caracterizado en PR #80 |
+| DEF-15 | 2026-10-23 | Backend | media | la API satura con 1-2 usuarios concurrentes por proceso; p95 11 s a 50 VUs, sin errores | RNF-01 | CP-PERF-02, CP-PERF-03 | [#99](https://github.com/santiago6124/OnTimeAI-Backend/issues/99); medido en PR #95 (k6), pendiente de fix |
 
 ## Fichas
 
@@ -121,6 +122,13 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 ### DEF-14 · login del Frontend responde 200 con error
 
 - **Entorno:** local (PR #80). **Pasos:** backend responde 200 sin `access_token` a `POST /auth/login`. **Esperado:** 401 o 502 con `detail`. **Obtenido:** 200 con `{ "detail": "Credenciales incorrectas" }` por `login.status || 401`. El cliente podría creer que entró.
+
+### DEF-15 · la API satura con pocos usuarios concurrentes
+
+- **Entorno:** local y CI, un proceso de uvicorn con base fixture (PR #95). **Detectado por:** k6, primera medición de carga del proyecto.
+- **Obtenido:** ~6,5 req/s del mix del dashboard; p95 0,9 s a 3 VUs, 3,6 s a 10, 7-17 s a 20, 11,1 s en la rampa a 50; 0 % de errores. Hace cola, no se cae.
+- **Causa:** cuatro endpoints recalculan la ventana activa en cada request, más `/metrics/model`. Producción corre ese mismo proceso en una instancia.
+- **Siguiente paso:** cachear la ventana activa por ciclo (cambia cada 15 min) y medir de nuevo con el mismo script; los umbrales de `stress.yml` bajan cuando la mejora esté.
 
 ## Lo que muestra el registro
 
