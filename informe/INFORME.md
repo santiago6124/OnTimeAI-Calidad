@@ -41,9 +41,9 @@ Dockerfiles; en el Frontend, `src/`):
 
 | Repo | Commit | Tests | Cobertura líneas | Cobertura ramas | Funciones con CC > 10 | Promedio CC | CI | Sonar / smoke / stress |
 |---|---|---|---|---|---|---|---|---|
-| Backend | `416eef8` | 544 | 52,6 % | 42,8 % | 21 | 5,93 | sí (99 verdes / 1 rojo) | no / no / no |
-| Scrapper | `2697284` | 80 | 50,7 % | 33,7 % | 4 | 6,03 | sí (36 / 1) | no / no / no |
-| Frontend | `b68a6c2` | 233 | 17,6 % | 13,7 % | 36 | 2,34 | sí (100 / 0) | no / no / no |
+| Backend | `7de37ba` | 544 | 52,6 % | 42,8 % | 21 | 5,93 | sí (99 verdes / 1 rojo) | no / no / no |
+| Scrapper | `2c65157` | 80 | 50,7 % | 33,7 % | 4 | 6,03 | sí (36 / 1) | no / no / no |
+| Frontend | `6c9aef4` | 233 | 17,6 % | 13,7 % | 36 | 2,34 | sí (100 / 0) | no / no / no |
 
 Lo que ya existía y se reutilizó: CI en cada push y PR, deploy automático a
 Cloud Run por Workload Identity, un vigía con alertas por Telegram, fallback

@@ -268,8 +268,8 @@
         "aprobados": 540
       },
       "meta": {
-        "commit": "416eef8",
-        "ref": "416eef8",
+        "commit": "7de37ba",
+        "ref": "7de37ba",
         "fecha": "2026-10-23"
       }
     },
@@ -427,8 +427,8 @@
         "aprobados": 80
       },
       "meta": {
-        "commit": "2697284",
-        "ref": "2697284",
+        "commit": "2c65157",
+        "ref": "2c65157",
         "fecha": "2026-10-23"
       }
     },
@@ -691,7 +691,7 @@
         "archivos": 74
       },
       "meta": {
-        "commit": "b68a6c2",
+        "commit": "6c9aef4",
         "ref": "origin/main",
         "fecha": "2026-10-22"
       }
