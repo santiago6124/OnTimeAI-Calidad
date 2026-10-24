@@ -91,7 +91,7 @@ por debajo y por encima del rango, cero piernas, máximo de piernas.
 | CP-CC-01 | trinquete de complejidad: función nueva > 10 | falla | `tests/test_complejidad.py::test_sin_baseline_toda_violacion_es_nueva` |
 | CP-CC-02 | trinquete: exenta que crece | falla | `test_exenta_que_crece_falla` |
 | CP-CC-03 | trinquete: `--actualizar-baseline` con crecimiento | se rechaza | `test_actualizar_baseline_solo_achica` |
-| CP-COB-01 | cobertura sobre líneas cambiadas | ≥ 80 % | diff-cover 96 % en PR #91 |
+| CP-EST-03 | cobertura sobre líneas cambiadas | ≥ 80 % | diff-cover 96 % en PR #91 |
 
 ## Smoke post-deploy (Backend)
 
@@ -107,16 +107,43 @@ por debajo y por encima del rango, cero piernas, máximo de piernas.
 
 | CP | Escenario | Umbrales | Resultado |
 |---|---|---|---|
-| CP-PERF-01 | smoke: 1 VU, 30 s | checks 100 % | pendiente de PR |
-| CP-PERF-02 | stress: 0 → 50 VU en 3 min | p95 bajo umbral, errores < 1 % | pendiente de PR |
-| CP-PERF-03 | soak: 20 VU × 10 min | p95 estable, errores < 1 % | pendiente de PR |
+| CP-PERF-01 | smoke: 1 VU, 30 s | checks > 99 %, errores < 1 % | ✅ p95 190 ms, 0 % errores (run 40011382323) |
+| CP-PERF-02 | stress: 0 → 20 → 50 VU en 3 min | p95 < 30 s, errores < 1 %, checks > 99 % | ✅ p95 3,2 s, 0 % errores, 22 req/s (run 40011382323); la latencia es alta: DEF-15 |
+| CP-PERF-03 | soak: 20 VU × 10 min | p95 < 35 s, errores < 1 %, checks > 99 % | ✅ p95 1,7 s, deriva +10 %, 0 % errores (run 40011382323); repetido en `main`, run 40022138947 |
 
 ## Integración externa
 
 | CP | Qué | Esperado | Resultado |
 |---|---|---|---|
-| CP-INT-01 | GCS con CAS contra bucket real: subir, leer generación, subir con generación vieja, subir con la correcta | 412 en la vieja, 200 en la correcta | pendiente de workflow |
-| CP-INT-02 | canary FR24 (`validate_sources.py --check fr24-airport`) | cobertura de campos ≥ 0,8 | pendiente |
+| CP-INT-01 | GCS con CAS contra bucket real: subir, leer generación, subir con generación vieja, subir con la correcta | 412 en la vieja, 200 en la correcta | ✅ run 40008474040 (PR #22), en `main` 40019663794 y diario desde el 2026-10-24 (40088130959) |
+| CP-INT-02 | canary FR24 (`validate_sources.py --check fr24-airport`) | cobertura de campos ≥ 0,8 | manual: 0,89 la última vez; no está automatizado en CI (riesgo RP-01) |
+
+## Regresión y caracterización vinculadas a defectos
+
+Casos a los que apunta el registro de defectos. Los primeros ocho son la
+prueba de regresión de un defecto ya corregido; los `CP-COB` son tests de
+caracterización que fijan el comportamiento actual y dejaron a la vista un
+defecto todavía abierto.
+
+| CP | Qué verifica | Esperado | Test o verificación | Defecto |
+|---|---|---|---|---|
+| CP-CAL-01 | el calibrador post-cadena se ajusta sobre todas las filas elegibles | la proporción predicha sigue a la observada | `tests/test_chain_calibration.py` | DEF-02 |
+| CP-API-01 | `threshold_used` llega a la respuesta de `/flights` | campo presente | `tests/test_optional_prediction_columns.py` | DEF-06 |
+| CP-API-05 | la ventana activa excluye vuelos aterrizados | no aparecen | `tests/test_ventana_activa.py` | DEF-07 |
+| CP-API-09 | guardar y leer vuelos del modo viajero | 200 en ambas | `tests/test_modo_viajero.py` | DEF-03 |
+| CP-LIVE-01 | dos instancias del mismo vuelo no colapsan en un id | ids distintos | `tests/test_stable_id.py` | DEF-05 |
+| CP-LIVE-02 | el cache de clima vence por antigüedad | el METAR viejo se vuelve a pedir | `tests/test_clima_fresco.py` | DEF-04 |
+| CP-UI-01 | la cortina se ve con "reducir movimiento" activo | visible | exploratorio, manual (CSS) | DEF-09 |
+| CP-MOB-01 | el bundle iOS compila con todas las páginas | `build-mobile.mjs --strict` en verde | paso de `ci.yml` del Frontend | DEF-10 |
+| CP-COB-01 | `faa_nas` lee los minutos del feed real | minutos presentes | `tests/test_faa_nas.py` (con fixture XML) | DEF-12, abierto |
+| CP-COB-02 | el CLI `predict.py` puntúa un vuelo sin historial | devuelve una probabilidad | `tests/test_predict.py` | DEF-11, abierto |
+| CP-COB-FE | `toUTCDate` con offset negativo; login sin token del backend | fecha válida; respuesta de error | `src/lib/__tests__/fmt-time.test.ts`, `src/app/api/auth/login/__tests__/route.test.ts` | DEF-13 y DEF-14, abiertos |
+
+## Contingencia
+
+| CP | Qué | Esperado | Estado |
+|---|---|---|---|
+| CP-CONT-01 | simulacro: ejecución manual de `ontimeai-live-pull-2` sin `GCS_BUCKET` | el vigía alerta, el job termina sin subir nada y la API sigue sirviendo | planificado (mensual, `CONTINGENCIA.md`); todavía no se ejecutó |
 
 ## Defecto real con contraste rojo/verde
 

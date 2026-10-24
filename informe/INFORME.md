@@ -1,6 +1,6 @@
 ---
 subtitle: "Trabajo Práctico Integrador · Calidad de Software · UCC · 2026"
-author: "Grupo OnTimeAI"
+author: "Santiago Carranza · Lorenzo Galaverna · Facundo Oliva Marchetto · Mateo Pappalardo"
 date: "26 de octubre de 2026"
 ---
 
@@ -223,7 +223,7 @@ mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
   páginas y los componentes, que necesitan un entorno de navegador que quedó
   fuera por el orden de corte; lo que sí subió al 100 % es la capa de datos
   (`src/lib/api.ts`) y los handlers. Lo que impide retroceder quedó en los
-  tres: trinquetes por repo subidos al valor real tras los merges (Backend 59 %
+  tres: trinquetes por repo subidos al valor real tras los merges (Backend 58 %
   combinado, Scrapper 60, Frontend 32/24/20/32) y 80 % sobre cada línea nueva. El
   hueco mayor que queda es el mismo que concentra la complejidad:
   `live_pull.py:main` (72, 6 % de cobertura), que por eso no se refactorizó.
@@ -256,6 +256,12 @@ mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
   DEF-14) y el de capacidad (DEF-15), todos en código que llevaba meses sin
   ejecutarse por un test. Quedan registrados con el formulario, con el caso
   que los reproduce, para corregirlos con contraste rojo/verde.
+- **El modelo quedó mejor calibrado y discrimina peor.** En producción
+  (`/metrics/model`, 2026-10-24, 7.029 vuelos con resultado) el Brier es 0,078,
+  bajo la meta de 0,15 de OU-02, contra 0,195 en septiembre; el AUC es 0,612,
+  bajo la meta de 0,75 y por debajo del 0,79 de septiembre. Las ventanas no son
+  las mismas, así que la comparación es indicativa, pero OU-02 queda como
+  cumplido a medias y es el objetivo de usuario más importante que sigue abierto.
 - **Riesgos que siguen abiertos:** FR24 como fuente única con canary
   pendiente (RP-01), la calibración (RP-03, ya con medición continua) y el
   plazo del TP (RY-01), que obligó a dejar afuera E2E en navegador y el
