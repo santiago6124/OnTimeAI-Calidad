@@ -53,6 +53,9 @@ de GitHub Actions como fuente.
 | 2026-10-23 | Scrapper | CI en `main` | [40019892833](https://github.com/santiago6124/OnTimeAI-Scrapper/actions/runs/40019892833) | verde | trinquete de cobertura a 60 con 60,7 % medido (PR #24) |
 | 2026-10-23 | Frontend | CI en `main` | [40019991726](https://github.com/santiago6124/OnTimeAI-Frontend/actions/runs/40019991726) | verde | gates y cobertura con trinquete 32/24/20/32 sobre `main` tras #80 |
 
+| 2026-10-23 | Backend | Stress (k6) en `main` | [40022138947](https://github.com/santiago6124/OnTimeAI-Backend/actions/runs/40022138947) | verde | smoke + stress + soak de 10 min tras el merge de #95, umbrales OK |
+| 2026-10-24 | Scrapper | Integración (programada, 06:17 UTC) | run diario de `integration.yml` | verde | el canary diario contra el GCS real ya corre solo |
+
 Los deploys intermedios del Backend aparecen como `cancelled`: con varios merges
 seguidos, GitHub conserva un solo run pendiente por grupo de concurrencia y
 reemplaza el anterior por el más nuevo; el último de cada tanda desplegó y su
