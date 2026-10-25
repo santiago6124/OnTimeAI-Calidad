@@ -40,6 +40,6 @@ sostiene. Las columnas "al inicio" y "al cierre" se llenan desde
 | OU-02 | AUC 0,79 / Brier 0,195 sobre `proba_delay` (medición del 2026-09-06, antes del calibrador post-cadena) | AUC 0,612 / Brier 0,078 sobre 7.029 vuelos con resultado (`/metrics/model`, 2026-10-24) | Brier sí; AUC no. Las dos mediciones usan ventanas distintas |
 | OU-03 | sin medir | p95 11,1 s a 50 VUs y 6,8 s a 20 VUs con un proceso (k6, PoC local); 0 % de errores | no: DEF-15 |
 | OE-01 | Backend ≈ 4 min, Scrapper ≈ 1 min, Frontend ≈ 2 min | mediana 1,6 / 0,4 / 1,1 min; con los gates nuevos, < 3 min | sí |
-| OE-03 | 52,6 % / 50,7 % / 17,6 % de líneas (código desplegado) | 61,1 % / 64,8 % / 37,0 % (`main` tras los merges, 2026-10-23) | Backend y Scrapper sí; Frontend no |
+| OE-03 | 52,6 % / 50,7 % / 17,6 % de líneas (código desplegado) | 61,1 % / 64,8 % / 39,3 % de sentencias (`main` tras los merges; Backend y Scrapper 2026-10-23, Frontend 2026-10-25); combinada del CI 59,0 % / 60,7 % | Backend y Scrapper sí en sentencias (Backend a un punto en la combinada); Frontend no |
 | OE-04 | 21 / 4 / 36 | 18 / 4 / 35 | sí (sólo bajó) |
 | OE-05 | 15 de los últimos 15 fixes del Backend con test | 77 % / 78 % / 31 % sobre todos los fixes históricos (`mediciones/proceso-2026-10-23.md`) | parcial: el Frontend arrastra fixes de CSS sin test |

@@ -11,7 +11,7 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 
 | ID | Fecha | Repo | Severidad | Resumen | Requisito | Caso | Corrección y test de regresión |
 |---|---|---|---|---|---|---|---|
-| DEF-01 | 2026-10-23 | Backend | alta | el setup de `adsb_lineage` llama a una función que no existe | RNF-05 | CP-EST-01, CP-FE-01 | [#90](https://github.com/santiago6124/OnTimeAI-Backend/issues/90) → PR #91, `tests/test_adsb_lineage.py` |
+| DEF-01 | 2026-10-23 | Backend | alta | el setup de `adsb_lineage` llama a una función que no existe | RNF-05 | CP-EST-01, CP-FE-01 | [#90](https://github.com/santiago6124/OnTimeAI-Backend/issues/90) → PR #91 (cerrado; la misma rama se mergeó como #100), `tests/test_adsb_lineage.py` |
 | DEF-02 | 2026-10-16 | Backend | alta | el calibrador ajustaba sobre el 1,3 % de los datos | RF-01 | CP-CAL-01 | PR #86, `tests/test_chain_calibration.py` |
 | DEF-03 | 2026-10-03 | Backend | alta | guardar un vuelo devolvía 200 y leerlos devolvía 500 | RF-06 | CP-API-09 | PR #81, `tests/test_modo_viajero.py` |
 | DEF-04 | 2026-09-25 | Backend | crítica | el cache de clima daba todo por fresco y congeló el METAR | RF-01 | CP-LIVE-02 | PR #74, `tests/test_clima_fresco.py` |
@@ -31,7 +31,7 @@ descripción de cada PR, que ya traía reproducción, causa y medición.
 
 ### DEF-01 · bug(adsb): el setup de adsb_lineage llama a una función que no existe
 
-- **Entorno:** CI. **Detectado por:** el gate "Bugs críticos" (ruff F821) del PR #91, primer run rojo.
+- **Entorno:** CI. **Detectado por:** el gate "Bugs críticos" (ruff F821) del PR #91, primer run rojo. El #91 se cerró y la misma rama se reabrió y mergeó como PR #100.
 - **Pasos:** `python -m feature_engineering_v7.adsb_lineage --setup`.
 - **Esperado:** descarga la base de aeronaves, construye el mapa `TAIL_NUM → ICAO24` y sale con "Setup completo".
 - **Obtenido:** `NameError: name 'download_faa_registry' is not defined` (línea 367).

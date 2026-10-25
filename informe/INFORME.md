@@ -17,9 +17,11 @@ sostenido), un smoke post-deploy contra Cloud Run y una prueba de integración
 real contra Google Cloud Storage, se diseñan casos con clases de equivalencia,
 valores límite y tablas de decisión, se registra un defecto real detectado por
 el gate con contraste rojo/verde, y se mide una mejora de complejidad antes y
-después. Con los 16 PRs mergeados, la cobertura del código desplegado pasó de 52,6 a
-61,1 % en el Backend, de 50,7 a 64,8 % en el Scrapper y de 17,6 a 37,0 % en el
-Frontend, con 1.452 tests (antes 857); tres funciones salieron de la baseline de
+después. Con los 16 PRs mergeados, la cobertura de sentencias del código desplegado
+pasó de 52,6 a 61,1 % en el Backend, de 50,7 a 64,8 % en el Scrapper y de 17,6 a
+39,3 % en el Frontend (la combinada de sentencias y ramas, que es el total que
+imprime el pipeline, quedó en 59,0 % y 60,7 %; §6), con 1.490 tests (antes 857);
+tres funciones salieron de la baseline de
 complejidad, y las pruebas nuevas encontraron cinco defectos más. Todos los
 números salen de los runs del pipeline y de `scripts/medir.py` del repositorio
 hub `OnTimeAI-Calidad`.
@@ -58,7 +60,7 @@ fixes del Backend, 78 % del Scrapper).
 | Pipeline | compilación, pruebas, análisis estático, cobertura, quality gate, reporte automático | los tres `ci.yml` corren ruff/ESLint, gate de complejidad, jscpd, tests con cobertura de líneas y ramas, diff-cover y un resumen en el job con artifacts | **sí** |
 | Quality gate | bloquea bugs críticos, duplicación > 5 %, cobertura sobre código nuevo < 80 % | ruff E9/F63/F7/F82 y ESLint en error; jscpd `--threshold 5`; diff-cover `--fail-under 80` | **sí**, y el primer run del Backend lo demostró con un bug real |
 | Cobertura sobre código nuevo | 80 % | 96 % en el PR del quality gate del Backend, 96 % en el del Scrapper, 94 % en el refactor | **sí** |
-| Cobertura sobre código existente | 60 % | Backend 52,6 → **61,1 %** de líneas; Scrapper 50,7 → **64,8 %**; Frontend 17,6 → 37,0 % (medido sobre `main` tras los merges, §6) | **Backend y Scrapper sí; Frontend no**; trinquetes subidos al valor real (Scrapper 60, Backend 59, Frontend 32/24/20/32) |
+| Cobertura sobre código existente | 60 % | De sentencias: Backend 52,6 → **61,1 %**; Scrapper 50,7 → **64,8 %**; Frontend 17,6 → 39,3 %. Combinada de sentencias y ramas, el total que imprime el CI: Backend 50,3 → **59,0 %**; Scrapper 46,9 → **60,7 %** (medido sobre `main`, §6) | **Scrapper sí en las dos; Backend sí en sentencias y a un punto en la combinada; Frontend no**; trinquetes subidos al valor real (Scrapper 60, Backend 58, Frontend 32/24/20/32) |
 | Smoke test | ejecutado por el pipeline tras el despliegue | `smoke.yml` con `workflow_run` tras `Deploy`: siete checks contra Cloud Run. Corrió solo en `main` tras el deploy del 23/10 (run 40021794808, 7/7 contra la revisión `00077-q42`) | **sí** |
 | Integración externa | una probada contra entorno real | compare-and-swap contra el GCS real en el bucket de QA `ontimeai-prod-qa`, por Workload Identity, en 5,6 s | **sí** |
 | Stress y esfuerzo sostenido | ejecutado, con resultados y umbrales | k6 en `stress.yml`: smoke (1 VU), stress (0 → 20 → 50 VU, 3 min) y soak (20 VU, 10 min) contra la API con base fixture de 200 vuelos. PoC local: p95 135 ms / 11,1 s / 6,8 s; en CI (run 40011382323, soak de 10 min): p95 190 ms / 3,2 s / 1,7 s, 22 req/s, deriva del soak +10 %; 0 % de errores y checks 100 % en todos; umbrales `http_req_failed < 1 %`, checks > 99 %, p95 < 30 s (stress) y < 35 s (soak); corrió también en `main` tras el merge (run 40022138947, verde) | **sí**, y midió por primera vez la capacidad real (DEF-15) |
@@ -174,17 +176,32 @@ rojos y verdes con lo que detectó cada uno está en `docs/EVIDENCIA_CI.md`.
 
 # 6. Evolución de las métricas
 
-Medición "después" del 2026-10-23 sobre **`origin/main` de cada repo, con
-los 16 PRs del TP ya mergeados** (`mediciones/2026-10-23-main`, mismo script y
-misma definición que la línea de base). En el Frontend, `main` recibió además
-cuatro PRs ajenos al TP ese mismo día, que suman código y tests; los números
-son los de `main` tal como quedó:
+Medición "después" sobre **`origin/main` de cada repo, con los 16 PRs del TP
+ya mergeados**, con el mismo script y la misma definición que la línea de base.
+Backend y Scrapper se midieron el 2026-10-23 (`mediciones/2026-10-23-main`);
+desde entonces su código no cambió (el Backend sólo recibió el ajuste del
+trinquete en `pyproject.toml`). El Frontend se volvió a medir el 2026-10-25
+(`mediciones/2026-10-25-main`, commit `aa2f88a`) porque después de la primera
+medición entraron a `main` dos PRs ajenos al TP (#84 y #85). Desde la línea de
+base suman siete PRs ajenos (login con Google, Face ID, Sign in with Apple), que
+aportan código y tests; los números son los de `main` tal como quedó:
 
-| Repo | Tests | Cobertura líneas | Cobertura ramas | Funciones con CC > 10 | Funciones con CC > 20 (radon) | Promedio CC |
-|---|---|---|---|---|---|---|
-| Backend | 544 → **771** | 52,6 → **61,1 %** | 42,8 → **52,0 %** | 21 → **18** | 11 → 10 | 5,93 → 5,71 |
-| Scrapper | 80 → **130** | 50,7 → **64,8 %** | 33,7 → **46,5 %** | 4 → 4 | 4 → 4 | 6,03 → 6,03 |
-| Frontend | 233 → **551** | 17,6 → **37,0 %** | 13,7 → **27,3 %** | 36 → 35 | 4 → 4 | 2,34 → 1,97 |
+| Repo | Tests | Cobertura sentencias | Cobertura ramas | Combinada (total del CI) | Funciones con CC > 10 | Funciones con CC > 20 (radon) | Promedio CC |
+|---|---|---|---|---|---|---|---|
+| Backend | 544 → **771** | 52,6 → **61,1 %** | 42,8 → **52,0 %** | 50,3 → **59,0 %** | 21 → **18** | 11 → 10 | 5,93 → 5,71 |
+| Scrapper | 80 → **130** | 50,7 → **64,8 %** | 33,7 → **46,5 %** | 46,9 → **60,7 %** | 4 → 4 | 4 → 4 | 6,03 → 6,03 |
+| Frontend | 233 → **589** | 17,6 → **39,3 %** | 13,7 → **27,8 %** | — | 36 → 34 | 4 → 4 | 2,34 → 1,92 |
+
+Cómo se leen contra el pipeline: pytest imprime como `Total coverage` la
+combinada de sentencias y ramas (Backend 59,02 % en el run de `main`
+40120006851; Scrapper 60,70 % en 40019892833), y en la misma tabla `TOTAL` trae
+sentencias y faltantes (Backend 6.624 y 2.575, de donde sale el 61,1 %). El run
+del Scrapper del 24/10 dio 60,81 % sobre el mismo commit: una línea que unos
+runs cubren y otros no. Vitest no calcula combinada: el CI del Frontend
+controla cada métrica por separado y su último run en `main` (40198519052)
+reporta 39,27 % de líneas y 27,82 % de ramas, los mismos valores de la tabla.
+La meta del 60 % se evalúa sobre sentencias, que es la cobertura de sentencia
+que pide el tema de pruebas dinámicas; la de decisión es la columna de ramas.
 
 De dónde salió cada ganancia: en el Backend, 137 tests de caracterización
 sobre `faa_nas.py` (0 → 100 %), `predict.py` (42 → 99 %), `watchdog.py`
@@ -219,7 +236,8 @@ mismo no se tocó `live_pull.py:main` (72, 6 % de cobertura).
 # 7. Análisis crítico
 
 - **La cobertura del 60 % se alcanzó en el Backend (61,1 %) y en el Scrapper
-  (64,8 %), no en el Frontend (37,0 %).** En el Frontend el hueco son las
+  (64,8 %), no en el Frontend (39,3 %); en la combinada que imprime el CI el
+  Backend queda a un punto (59,0 %).** En el Frontend el hueco son las
   páginas y los componentes, que necesitan un entorno de navegador que quedó
   fuera por el orden de corte; lo que sí subió al 100 % es la capa de datos
   (`src/lib/api.ts`) y los handlers. Lo que impide retroceder quedó en los
@@ -276,7 +294,7 @@ real y la API tiene por primera vez números de carga con umbrales. Las
 decisiones se apoyaron en mediciones propias (línea de base, defectos
 agrupados, complejidad concentrada, incidentes previos). En dos días la
 cobertura del código desplegado subió 8,5 puntos en el Backend, 14,1 en el
-Scrapper y 19,4 en el Frontend, y ese trabajo encontró cinco defectos reales
+Scrapper y 21,7 en el Frontend, y ese trabajo encontró cinco defectos reales
 además del que detectó el gate. Lo que no se cumplió (60 % en el Frontend,
 latencia de la API bajo carga) quedó medido, registrado y con el mecanismo
 para no retroceder. El nivel declarado se sostiene: prototipo parcial, con el
@@ -293,5 +311,5 @@ pipeline de un prototipo avanzado.
 | Integración externa | `docs/CONTINGENCIA.md`, PR Scrapper #22, `docs/SMOKE.md` del Backend |
 | Registro de defectos | issues con label `defecto` en cada repo; índice en `docs/DEFECTOS.md` |
 | Herramienta incorporada y matriz | `docs/HERRAMIENTA_K6.md` |
-| Mediciones antes y después | `mediciones/2026-10-22-antes`, `mediciones/2026-10-23-main` (tras los merges), `mediciones/evidencia/`, `mediciones/proceso-*.md` |
+| Mediciones antes y después | `mediciones/2026-10-22-antes`, `mediciones/2026-10-23-main` (Backend y Scrapper tras los merges), `mediciones/2026-10-25-main` (Frontend), `mediciones/evidencia/`, `mediciones/proceso-*.md` |
 | Demostración | `docs/DEMO.md` |

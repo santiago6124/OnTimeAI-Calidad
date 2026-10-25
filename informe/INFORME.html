@@ -53,13 +53,14 @@ de integración real contra Google Cloud Storage, se diseñan casos con
 clases de equivalencia, valores límite y tablas de decisión, se registra
 un defecto real detectado por el gate con contraste rojo/verde, y se
 mide una mejora de complejidad antes y después. Con los 16 PRs
-mergeados, la cobertura del código desplegado pasó de 52,6 a 61,1 % en
-el Backend, de 50,7 a 64,8 % en el Scrapper y de 17,6 a 37,0 % en el
-Frontend, con 1.452 tests (antes 857); tres funciones salieron de la
-baseline de complejidad, y las pruebas nuevas encontraron cinco defectos
-más. Todos los números salen de los runs del pipeline y de
-<code>scripts/medir.py</code> del repositorio hub
-<code>OnTimeAI-Calidad</code>.</p>
+mergeados, la cobertura de sentencias del código desplegado pasó de 52,6
+a 61,1 % en el Backend, de 50,7 a 64,8 % en el Scrapper y de 17,6 a 39,3
+% en el Frontend (la combinada de sentencias y ramas, que es el total
+que imprime el pipeline, quedó en 59,0 % y 60,7 %; §6), con 1.490 tests
+(antes 857); tres funciones salieron de la baseline de complejidad, y
+las pruebas nuevas encontraron cinco defectos más. Todos los números
+salen de los runs del pipeline y de <code>scripts/medir.py</code> del
+repositorio hub <code>OnTimeAI-Calidad</code>.</p>
 <p>Repositorio del TP: <a
 href="https://github.com/santiago6124/OnTimeAI-Calidad">https://github.com/santiago6124/OnTimeAI-Calidad</a>.
 Repos del sistema: <code>OnTimeAI-Backend</code>,
@@ -171,12 +172,14 @@ bug real</td>
 <tr>
 <td>Cobertura sobre código existente</td>
 <td>60 %</td>
-<td>Backend 52,6 → <strong>61,1 %</strong> de líneas; Scrapper 50,7 →
-<strong>64,8 %</strong>; Frontend 17,6 → 37,0 % (medido sobre
-<code>main</code> tras los merges, §6)</td>
-<td><strong>Backend y Scrapper sí; Frontend no</strong>; trinquetes
-subidos al valor real (Scrapper 60, Backend 59, Frontend
-32/24/20/32)</td>
+<td>De sentencias: Backend 52,6 → <strong>61,1 %</strong>; Scrapper 50,7
+→ <strong>64,8 %</strong>; Frontend 17,6 → 39,3 %. Combinada de
+sentencias y ramas, el total que imprime el CI: Backend 50,3 →
+<strong>59,0 %</strong>; Scrapper 46,9 → <strong>60,7 %</strong> (medido
+sobre <code>main</code>, §6)</td>
+<td><strong>Scrapper sí en las dos; Backend sí en sentencias y a un
+punto en la combinada; Frontend no</strong>; trinquetes subidos al valor
+real (Scrapper 60, Backend 58, Frontend 32/24/20/32)</td>
 </tr>
 <tr>
 <td>Smoke test</td>
@@ -343,20 +346,26 @@ críticos (ruff E9/F63/F7/F82 o ESLint + <code>tsc</code>), duplicación
 La tabla completa de runs rojos y verdes con lo que detectó cada uno
 está en <code>docs/EVIDENCIA_CI.md</code>.</p>
 <h1 id="6-evolución-de-las-métricas">6. Evolución de las métricas</h1>
-<p>Medición "después" del 2026-10-23 sobre
-<strong><code>origin/main</code> de cada repo, con los 16 PRs del TP ya
-mergeados</strong> (<code>mediciones/2026-10-23-main</code>, mismo
-script y misma definición que la línea de base). En el Frontend,
-<code>main</code> recibió además cuatro PRs ajenos al TP ese mismo día,
-que suman código y tests; los números son los de <code>main</code> tal
-como quedó:</p>
+<p>Medición "después" sobre <strong><code>origin/main</code> de cada
+repo, con los 16 PRs del TP ya mergeados</strong>, con el mismo script y
+la misma definición que la línea de base. Backend y Scrapper se midieron
+el 2026-10-23 (<code>mediciones/2026-10-23-main</code>); desde entonces
+su código no cambió (el Backend sólo recibió el ajuste del trinquete en
+<code>pyproject.toml</code>). El Frontend se volvió a medir el
+2026-10-25 (<code>mediciones/2026-10-25-main</code>, commit
+<code>aa2f88a</code>) porque después de la primera medición entraron a
+<code>main</code> dos PRs ajenos al TP (#84 y #85). Desde la línea de
+base suman siete PRs ajenos (login con Google, Face ID, Sign in with
+Apple), que aportan código y tests; los números son los de
+<code>main</code> tal como quedó:</p>
 <table>
 <thead>
 <tr>
 <th>Repo</th>
 <th>Tests</th>
-<th>Cobertura líneas</th>
+<th>Cobertura sentencias</th>
 <th>Cobertura ramas</th>
+<th>Combinada (total del CI)</th>
 <th>Funciones con CC &gt; 10</th>
 <th>Funciones con CC &gt; 20 (radon)</th>
 <th>Promedio CC</th>
@@ -368,6 +377,7 @@ como quedó:</p>
 <td>544 → <strong>771</strong></td>
 <td>52,6 → <strong>61,1 %</strong></td>
 <td>42,8 → <strong>52,0 %</strong></td>
+<td>50,3 → <strong>59,0 %</strong></td>
 <td>21 → <strong>18</strong></td>
 <td>11 → 10</td>
 <td>5,93 → 5,71</td>
@@ -377,21 +387,35 @@ como quedó:</p>
 <td>80 → <strong>130</strong></td>
 <td>50,7 → <strong>64,8 %</strong></td>
 <td>33,7 → <strong>46,5 %</strong></td>
+<td>46,9 → <strong>60,7 %</strong></td>
 <td>4 → 4</td>
 <td>4 → 4</td>
 <td>6,03 → 6,03</td>
 </tr>
 <tr>
 <td>Frontend</td>
-<td>233 → <strong>551</strong></td>
-<td>17,6 → <strong>37,0 %</strong></td>
-<td>13,7 → <strong>27,3 %</strong></td>
-<td>36 → 35</td>
+<td>233 → <strong>589</strong></td>
+<td>17,6 → <strong>39,3 %</strong></td>
+<td>13,7 → <strong>27,8 %</strong></td>
+<td>—</td>
+<td>36 → 34</td>
 <td>4 → 4</td>
-<td>2,34 → 1,97</td>
+<td>2,34 → 1,92</td>
 </tr>
 </tbody>
 </table>
+<p>Cómo se leen contra el pipeline: pytest imprime como
+<code>Total coverage</code> la combinada de sentencias y ramas (Backend
+59,02 % en el run de <code>main</code> 40120006851; Scrapper 60,70 % en
+40019892833), y en la misma tabla <code>TOTAL</code> trae sentencias y
+faltantes (Backend 6.624 y 2.575, de donde sale el 61,1 %). El run del
+Scrapper del 24/10 dio 60,81 % sobre el mismo commit: una línea que unos
+runs cubren y otros no. Vitest no calcula combinada: el CI del Frontend
+controla cada métrica por separado y su último run en <code>main</code>
+(40198519052) reporta 39,27 % de líneas y 27,82 % de ramas, los mismos
+valores de la tabla. La meta del 60 % se evalúa sobre sentencias, que es
+la cobertura de sentencia que pide el tema de pruebas dinámicas; la de
+decisión es la columna de ramas.</p>
 <p>De dónde salió cada ganancia: en el Backend, 137 tests de
 caracterización sobre <code>faa_nas.py</code> (0 → 100 %),
 <code>predict.py</code> (42 → 99 %), <code>watchdog.py</code> (58 → 99
@@ -456,7 +480,8 @@ cobertura).</p>
 <h1 id="7-análisis-crítico">7. Análisis crítico</h1>
 <ul>
 <li><strong>La cobertura del 60 % se alcanzó en el Backend (61,1 %) y en
-el Scrapper (64,8 %), no en el Frontend (37,0 %).</strong> En el
+el Scrapper (64,8 %), no en el Frontend (39,3 %); en la combinada que
+imprime el CI el Backend queda a un punto (59,0 %).</strong> En el
 Frontend el hueco son las páginas y los componentes, que necesitan un
 entorno de navegador que quedó fuera por el orden de corte; lo que sí
 subió al 100 % es la capa de datos (<code>src/lib/api.ts</code>) y los
@@ -522,7 +547,7 @@ prueba contra el servicio real y la API tiene por primera vez números de
 carga con umbrales. Las decisiones se apoyaron en mediciones propias
 (línea de base, defectos agrupados, complejidad concentrada, incidentes
 previos). En dos días la cobertura del código desplegado subió 8,5
-puntos en el Backend, 14,1 en el Scrapper y 19,4 en el Frontend, y ese
+puntos en el Backend, 14,1 en el Scrapper y 21,7 en el Frontend, y ese
 trabajo encontró cinco defectos reales además del que detectó el gate.
 Lo que no se cumplió (60 % en el Frontend, latencia de la API bajo
 carga) quedó medido, registrado y con el mecanismo para no retroceder.
@@ -575,7 +600,8 @@ cada repo</td>
 <tr>
 <td>Mediciones antes y después</td>
 <td><code>mediciones/2026-10-22-antes</code>,
-<code>mediciones/2026-10-23-main</code> (tras los merges),
+<code>mediciones/2026-10-23-main</code> (Backend y Scrapper tras los
+merges), <code>mediciones/2026-10-25-main</code> (Frontend),
 <code>mediciones/evidencia/</code>,
 <code>mediciones/proceso-*.md</code></td>
 </tr>
